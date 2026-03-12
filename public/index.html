@@ -1,278 +1,279 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AW GYM: IRON SANCTUARY [MASTER_NODE]</title>
+    <title>AW GYM ENTERPRISES | The Iron Sanctuary</title>
     
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800;900&family=Montserrat:wght@200;300;400;600;800&family=Teko:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+        // --- REPLACE THIS WITH YOUR FIREBASE CONFIG ---
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT.firebaseapp.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT.appspot.com",
+            messagingSenderId: "YOUR_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
+
+        // Expose to window for the button click
+        window.loginWithGoogle = async () => {
+            try {
+                playHoverSound();
+                const result = await signInWithPopup(auth, provider);
+                console.log("Authenticated:", result.user.displayName);
+                // Trigger existing breach logic after successful login
+                startBreachSequence(result.user.displayName);
+            } catch (error) {
+                console.error("Auth Error:", error);
+                document.getElementById('gate-msg').innerText = "BREACH FAILED: AUTHENTICATION REQUIRED";
+                document.getElementById('gate-msg').classList.remove('hidden');
+            }
+        };
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        blood: { 500: '#E50914', 700: '#8B0000', 900: '#3D0000' },
+                        gunmetal: { 800: '#1C1C1C', 900: '#0F0F0F', 950: '#050505' },
+                        gold: { 500: '#D4AF37', 700: '#8A7322' }
+                    },
+                    fontFamily: {
+                        luxury: ['"Cinzel"', 'serif'],
+                        sans: ['"Montserrat"', 'sans-serif'],
+                        ticker: ['"Teko"', 'sans-serif']
+                    },
+                    backgroundImage: {
+                        'carbon-fiber': 'repeating-linear-gradient(45deg, #0a0a0a 0px, #0a0a0a 10px, #0f0f0f 10px, #0f0f0f 20px)',
+                        'blood-gradient': 'radial-gradient(circle at center, rgba(139,0,0,0.4) 0%, rgba(5,5,5,1) 80%)'
+                    }
+                }
+            }
+        }
+    </script>
 
     <style>
-        /* --- SYSTEM CORE --- */
-        :root {
-            --neon-red: #ff003c;
-            --neon-gold: #ffd700;
-            --void: #050505;
-            --glass: rgba(10, 10, 10, 0.85);
-        }
+        :root { cursor: crosshair; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #050505; }
+        ::-webkit-scrollbar-thumb { background: #3D0000; }
+        ::-webkit-scrollbar-thumb:hover { background: #E50914; }
+        body { background-color: #050505; color: #FFFFFF; overflow-x: hidden; user-select: none; }
+        
+        #audio-visualizer { position: fixed; bottom: 30px; left: 30px; z-index: 9999; display: flex; gap: 3px; align-items: flex-end; height: 20px; opacity: 0; transition: opacity 1s ease; }
+        .bar { width: 4px; background: #E50914; border-radius: 1px; animation: equalize 1s infinite alternate ease-in-out; box-shadow: 0 0 10px #E50914; }
+        @keyframes equalize { 0% { height: 5px; } 100% { height: 25px; } }
 
-        body {
-            background-color: var(--void);
-            font-family: 'Rajdhani', sans-serif;
-            color: white;
-            overflow-x: hidden;
-        }
+        #the-gate { position: fixed; inset: 0; background: #050505; z-index: 10000; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .cyber-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(229, 9, 20, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(229, 9, 20, 0.1) 1px, transparent 1px); background-size: 40px 40px; transform: perspective(500px) rotateX(60deg) translateY(-100px) translateZ(-200px); animation: gridMove 10s linear infinite; z-index: -1; opacity: 0.3; }
+        @keyframes gridMove { from { transform: perspective(500px) rotateX(60deg) translateY(0) translateZ(-200px); } to { transform: perspective(500px) rotateX(60deg) translateY(40px) translateZ(-200px); } }
 
-        .font-hud { font-family: 'Orbitron', sans-serif; }
+        #ambient-video-layer { position: fixed; inset: 0; width: 100vw; height: 100vh; object-fit: cover; z-index: -2; opacity: 0.3; filter: contrast(1.5) saturate(0) brightness(0.6); mix-blend-mode: luminosity; }
+        .red-overlay { position: fixed; inset: 0; background: radial-gradient(circle, transparent 20%, #050505 90%); box-shadow: inset 0 0 150px rgba(229, 9, 20, 0.15); z-index: -1; pointer-events: none; }
+        .glass-panel { background: rgba(15, 15, 15, 0.8); backdrop-filter: blur(16px); border: 1px solid rgba(229, 9, 20, 0.2); box-shadow: 0 20px 50px rgba(0,0,0,0.9); }
 
-        .fullscreen-video {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            object-fit: cover;
-            z-index: -1;
-        }
+        .product-tile { position: relative; overflow: hidden; border-radius: 4px; background: #0f0f0f; border: 1px solid #1c1c1c; transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1); }
+        .product-tile:hover { border-color: #E50914; transform: translateY(-10px) scale(1.02); box-shadow: 0 20px 40px -10px rgba(229, 9, 20, 0.4), inset 0 0 20px rgba(229, 9, 20, 0.1); z-index: 10; }
+        .product-media { position: relative; height: 350px; width: 100%; overflow: hidden; background: #000; }
+        .product-media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: opacity 0.4s ease, transform 1s ease; opacity: 1; filter: grayscale(0.2) contrast(1.2); }
+        .product-media video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.4s ease; transform: scale(1.05); filter: contrast(1.3); }
+        .product-tile:hover .product-media img { opacity: 0; transform: scale(1.1); }
+        .product-tile:hover .product-media video { opacity: 1; }
 
-        #gate-layer {
-            position: fixed;
-            inset: 0;
-            z-index: 9999;
-            background: black;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+        .glitch-text { position: relative; display: inline-block; }
+        .glitch-text::before, .glitch-text::after { content: attr(data-text); position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0.8; }
+        .glitch-text::before { left: 2px; text-shadow: -2px 0 red; clip: rect(24px, 550px, 90px, 0); animation: glitch-anim 3s infinite linear alternate-reverse; }
+        .glitch-text::after { left: -2px; text-shadow: -2px 0 blue; clip: rect(85px, 550px, 140px, 0); animation: glitch-anim 2.5s infinite linear alternate-reverse; }
+        @keyframes glitch-anim { 0% { clip: rect(10px, 9999px, 44px, 0); } 100% { clip: rect(85px, 9999px, 140px, 0); } }
 
-        .scan-line {
-            width: 100%; height: 2px;
-            background: var(--neon-red);
-            box-shadow: 0 0 20px var(--neon-red);
-            animation: scan 3s infinite linear;
-            position: absolute;
-            top: 0;
-        }
-        @keyframes scan { 0% {top:0%} 100% {top:100%} }
-
-        .vault-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 20px;
-            padding-bottom: 100px;
-        }
-        @media (min-width: 768px) {
-            .vault-grid { grid-template-columns: repeat(2, 1fr); }
-        }
-        @media (min-width: 1024px) {
-            .vault-grid { grid-template-columns: repeat(3, 1fr); }
-        }
-
-        .product-card {
-            position: relative;
-            height: 500px; 
-            border: 1px solid rgba(255,255,255,0.1);
-            background: #000;
-            overflow: hidden;
-            transition: transform 0.3s ease;
-        }
-
-        .product-card:hover {
-            border-color: var(--neon-gold);
-            transform: scale(1.02);
-            z-index: 10;
-        }
-
-        .p-video {
-            width: 100%; height: 100%;
-            object-fit: cover;
-            opacity: 0.5;
-            transition: opacity 0.3s;
-            filter: grayscale(80%);
-        }
-
-        .product-card:hover .p-video {
-            opacity: 1;
-            filter: grayscale(0%);
-        }
-
-        .p-overlay {
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.2) 60%);
-            z-index: 2;
-        }
-
-        .p-content {
-            position: absolute;
-            bottom: 0; left: 0; right: 0;
-            padding: 20px;
-            z-index: 3;
-        }
-
-        .btn-buy {
-            background: var(--neon-gold);
-            color: black;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            clip-path: polygon(10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0 30%);
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .btn-buy:hover { background: white; }
+        .btn-aggressive { display: inline-flex; align-items: center; justify-content: center; padding: 1rem 2.5rem; position: relative; overflow: hidden; background: transparent; border: 1px solid #E50914; color: #fff; font-family: 'Montserrat', sans-serif; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase; transition: all 0.3s ease; font-size: 0.8rem; }
+        .btn-aggressive::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: #E50914; transition: left 0.4s cubic-bezier(0.77, 0, 0.175, 1); z-index: -1; }
+        .btn-aggressive:hover { color: #000; box-shadow: 0 0 30px rgba(229, 9, 20, 0.6); }
+        .btn-aggressive:hover::before { left: 0; }
+        .price-ticker { font-family: 'Teko', sans-serif; font-size: 2.5rem; line-height: 1; letter-spacing: 1px; }
+        #manager-chatbot { clip-path: polygon(100% 100%, 100% 100%, 100% 100%, 100% 100%); transition: clip-path 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+        #manager-chatbot.active { clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%); }
+        .marquee-container { border-top: 1px solid #3D0000; border-bottom: 1px solid #3D0000; background: #050505; }
     </style>
 </head>
-<body>
+<body class="selection:bg-blood-500 selection:text-white">
 
-    <div id="gate-layer">
-        <video id="login-video-bg" class="fullscreen-video" autoplay muted loop playsinline></video>
-        <div class="absolute inset-0 bg-black/80"></div> 
-        <div class="scan-line"></div>
+    <audio id="bgm-audio" loop preload="auto">
+        <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_79808a3d54.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="sfx-hover" preload="auto">
+        <source src="/music.mp3/Alan Walker - Faded (Slowed   Reverb)(MP3_160K).mp3" type="audio/mpeg">
+    </audio>
 
-        <div class="relative z-10 text-center max-w-md w-full p-6 border-x-2 border-red-600 bg-black/90">
-            <h1 class="font-hud text-4xl text-white mb-2 tracking-tighter">RESTRICTED ACCESS</h1>
-            <p class="text-red-500 font-mono text-xs mb-8">security_protocol_override // v.9.0</p>
+    <div id="audio-visualizer">
+        <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+    </div>
+
+    <div id="the-gate">
+        <div class="cyber-grid"></div>
+        <div class="relative z-10 flex flex-col items-center text-center p-8 glass-panel max-w-xl mx-4">
+            <svg class="w-20 h-20 text-blood-500 mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+            </svg>
+            <h2 class="font-sans text-[10px] tracking-[0.5em] text-blood-500 mb-2 uppercase">Protocol: Iron Sanctuary</h2>
+            <h1 class="font-luxury text-4xl md:text-5xl text-white mb-6 glitch-text" data-text="SECURITY CHECK">SECURITY CHECK</h1>
+            <p class="font-sans text-xs text-gray-400 mb-10 tracking-widest leading-loose">
+                IDENTITY VERIFICATION REQUIRED. LOG IN WITH GOOGLE TO BREACH THE AW GYM ENTERPRISES MAINFRAME.
+            </p>
             
-            <div class="text-left space-y-4">
-                <p class="text-gray-400 italic text-sm border-l-2 border-red-500 pl-3">
-                    "Identify yourself via Google to decrypt the Vault inventory."
-                </p>
-                
-                <div id="g_id_onload"
-                     data-client_id="337014022994-pm3kv7ds4l878rucjboommlk9r2mcva3.apps.googleusercontent.com"
-                     data-callback="handleCredentialResponse"
-                     data-auto_prompt="false">
-                </div>
-                <div class="g_id_signin flex justify-center" data-type="standard" data-theme="filled_black" data-size="large" data-text="signin_with" data-shape="rectangular"></div>
-                
-                <p class="text-[10px] text-center text-gray-600 uppercase tracking-widest mt-4">Authorized access for awgyms.com only</p>
+            <button id="btn-breach" class="btn-aggressive w-full" onclick="loginWithGoogle()" onmouseenter="playHoverSound()">
+                LOG IN & BREACH
+            </button>
+
+            <div id="scan-progress" class="w-full h-1 bg-gunmetal-900 mt-8 overflow-hidden hidden">
+                <div class="h-full bg-blood-500 w-0" id="scan-bar"></div>
             </div>
+            <p id="gate-msg" class="text-[10px] font-sans text-blood-500 mt-4 tracking-[0.3em] uppercase hidden">Initiating Biometric Override...</p>
         </div>
     </div>
 
-    <div id="gym-layer" class="hidden opacity-0 transition-opacity duration-1000">
-        <video id="gym-video-bg" class="fullscreen-video" autoplay muted loop playsinline></video>
-        <div class="fixed inset-0 bg-black/70 z-[-1]"></div> 
+    <video id="ambient-video-layer" loop muted playsinline>
+        <source src="/public/videos/lv_0_20260213174657.mp4" type="video/mp4">
+    </video>
+    <div class="red-overlay"></div>
 
-        <nav class="sticky top-0 z-50 bg-black/90 border-b border-gray-800 backdrop-blur-md px-6 py-4 flex justify-between items-center">
-            <div class="font-hud text-xl tracking-widest uppercase">AW <span class="text-yellow-500">GYM</span></div>
-            <div class="text-xs font-mono text-green-500">● SECURE CONNECTION ACTIVE</div>
-        </nav>
-
-        <header class="container mx-auto px-4 py-12 border-b border-gray-800 mb-12">
-            <div class="flex flex-col md:flex-row gap-6 items-end">
-                <div class="bg-yellow-500 text-black font-bold px-4 py-1 text-xs">THE MANAGER</div>
-                <h2 class="text-3xl md:text-5xl font-hud uppercase">
-                    "Welcome, <span id="display-name" class="text-red-500">USER</span>. <br>
-                    The vault is open."
-                </h2>
+    <div id="main-app" class="hidden opacity-0">
+        <header class="fixed top-0 w-full z-50 glass-panel border-b-0">
+            <div class="flex justify-between items-center px-6 md:px-12 py-5">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 bg-blood-500 flex items-center justify-center font-luxury text-2xl font-black text-black tracking-tighter">AW</div>
+                    <div class="hidden md:flex flex-col">
+                        <span class="font-luxury text-xl tracking-[0.2em] text-white">AW GYM ENTERPRISES</span>
+                        <span class="font-sans text-[8px] tracking-[0.4em] text-blood-500">COMMERCIAL & PERSONAL ARSENAL</span>
+                    </div>
+                </div>
+                <div class="flex items-center gap-6">
+                    <span id="user-display" class="font-ticker text-blood-500 text-xl hidden md:block"></span>
+                    <button onclick="toggleChat()" class="btn-aggressive px-6 py-2 text-[10px]">SUMMON THE MANAGER</button>
+                </div>
             </div>
-            <p class="mt-4 text-gray-400 max-w-2xl">
-                Scroll down to view the 12 elite assets currently in stock. Prices are live and subject to change. Click NEGOTIATE to open a secure line on WhatsApp.
-            </p>
+            <div class="marquee-container overflow-hidden flex whitespace-nowrap py-1.5">
+                <div class="animate-[marquee_15s_linear_infinite] font-sans text-[10px] tracking-[0.4em] text-blood-500 font-bold">
+                    DOMINATE YOUR LIMITS • BUILD YOUR EMPIRE • SECURE COMMERCIAL GRADE EQUIPMENT • HEAVY DUTY ARSENAL • NO EXCUSES • 
+                </div>
+            </div>
         </header>
 
-        <main class="container mx-auto px-4">
-            <div id="products-container" class="vault-grid"></div>
-        </main>
+        <section class="h-screen flex flex-col items-center justify-center text-center relative px-4 pt-20 z-10">
+            <div class="absolute inset-0 bg-blood-gradient z-[-1]"></div>
+            <p class="gs-reveal font-sans text-[12px] tracking-[0.8em] text-blood-500 font-bold mb-6 uppercase">Forged in Pain</p>
+            <h1 class="gs-reveal font-luxury text-6xl md:text-8xl lg:text-[9rem] text-white leading-[0.9] mb-8 uppercase">
+                BUILD YOUR <br><span class="text-transparent bg-clip-text bg-gradient-to-r from-blood-700 via-blood-500 to-white">EMPIRE</span>
+            </h1>
+            <p class="gs-reveal font-sans text-gray-300 max-w-3xl text-sm md:text-base tracking-widest leading-loose mb-12">
+                We don't sell equipment. We sell the architecture of discipline. Commercial-grade treadmills, Olympic free weights, and elite supplementation. 
+            </p>
+            <a href="#the-vault" class="gs-reveal btn-aggressive px-12 py-5 text-sm">ENTER THE ARSENAL</a>
+        </section>
+
+        <section id="the-vault" class="py-32 px-4 md:px-12 lg:px-20 relative bg-gunmetal-950/90 border-t border-blood-900/50">
+            <div class="flex flex-col md:flex-row justify-between items-end border-b border-blood-900/50 pb-8 mb-16 gs-reveal">
+                <div>
+                    <h2 class="font-luxury text-4xl md:text-6xl text-white tracking-[0.1em]">THE ARSENAL</h2>
+                    <p class="font-sans text-[10px] tracking-[0.4em] text-blood-500 mt-2">SECURE YOUR ASSETS. NO CART. ONLY DIRECT NEGOTIATION.</p>
+                </div>
+                <div class="mt-6 md:mt-0 text-right">
+                    <p class="font-sans text-[10px] tracking-[0.3em] text-gray-400 mb-1">MARKET VOLATILITY INDEX</p>
+                    <p class="font-ticker text-3xl text-blood-500 animate-pulse" id="sys-time">00:00:00</p>
+                </div>
+            </div>
+            <div id="product-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8"></div>
+        </section>
+
+        <footer class="bg-[#020202] py-20 px-6 border-t border-blood-900 relative">
+            <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-10">
+                <div class="text-center md:text-left">
+                    <h2 class="font-luxury text-4xl text-white mb-2 tracking-widest">AW GYM ENTERPRISES</h2>
+                    <p class="font-sans text-[10px] tracking-[0.5em] text-blood-500">PAKISTAN • GLOBAL DOMINATION</p>
+                </div>
+                <button onclick="waGeneral()" class="btn-aggressive border-[#25D366] text-[#25D366]">WHATSAPP DIRECT</button>
+            </div>
+        </footer>
+    </div>
+
+    <div id="manager-chatbot" class="fixed bottom-0 right-0 md:bottom-8 md:right-8 w-full md:w-[400px] h-[600px] md:h-[650px] z-[9999] flex flex-col glass-panel">
+        <div class="bg-black border-b border-blood-700 p-5 flex justify-between items-center">
+            <h4 class="font-luxury text-white text-lg tracking-widest">THE MANAGER</h4>
+            <button onclick="toggleChat()" class="text-gray-500 hover:text-white text-3xl">&times;</button>
+        </div>
+        <div id="chat-stream" class="flex-1 p-6 overflow-y-auto flex flex-col gap-6 font-sans text-sm bg-carbon-fiber"></div>
+        <div class="p-5 bg-black border-t border-blood-900">
+            <button onclick="waGeneral()" class="w-full btn-aggressive border-[#25D366] text-[#25D366]">BYPASS AI - MESSAGE DIRECTLY</button>
+        </div>
     </div>
 
     <script>
-        // EXACT CONFIGURATION FROM YOUR SOURCE
-        const CONFIG = {
-            whatsapp_number: "+92 349 7814918",
-            login_bg: "/videos/intro.video.mp4",
-            gym_bg: "/videos/lv_0_20260213174657.mp4",
-            vault_inventory: [
-                { name: "WHEY ISOLATE GOLD", price: "18,500", desc: "Top tier recovery protein. 90% purity.", video: "/videos/Whey protein AD _ Vlad rum video(720P_HD).mp4" },
-                { name: "PSYCHOTIC PRE-WORKOUT", price: "6,500", desc: "High stimulant energy matrix.", video: "/videos/Cinematic C4 Pre Workout Commercial(720P_HD).mp4" },
-                { name: "CREATINE MONOHYDRATE", price: "4,500", desc: "Pure micronized strength powder.", video: "/videos/Pure Creatine Monohydrate By Wellcore _ The Ultimate Muscle Fuel(720P_HD).mp4" },
-                { name: "MASS GAINER EXTREME", price: "14,000", desc: "1200 Calories for hard gainers.", video: "/videos/Prozis _ Real Mass Gainer(720P_HD).mp4" },
-                { name: "HEAVY WRIST WRAPS", price: "1,500", desc: "Stiff support for heavy pressing.", video: "https://videos.pexels.com/video-files/5319759/5319759-uhd_2560_1440_25fps.mp4" },
-                { name: "leg press", price: "35000", desc: "7mm Neoprene for squat safety.", video: "/videos/RITFIT GAZELLE 3-in-1 Leg Press Hack Squat Machine for Home Gym(720P_HD).mp4" },
-                { name: "mats", price: "5,500", desc: "45L Capacity with wet compartment.", video: "/videos/Square36 Large Exercise and Yoga Mats(720P_HD).mp4" },
-                { name: "dumbbells", price: "1,200", desc: "Insulated stainless steel.", video: "/videos/VID_20260213175502.mp4" },
-                { name: "treadmill", price: "90000", desc: "Cotton blend with silicone grip.", video: "/videos/No Matter Where You Start - NordicTrack Commercial 2950 Treadmill Powered by iFit(720P_HD).mp4" },
-                { name: "MULTIVITAMIN PACK", price: "3,800", desc: "Daily immune and recovery support.", video: "/videos/Unlock the full power of Omega-3 with better absorption  _ Wellbeing Nutrition(720P_HD).mp4" },
-                { name: "OMEGA 3 FISH OIL", price: "2,500", desc: "Joint health and inflammation control.", video: "/videos/Unlock the full power of Omega-3 with better absorption  _ Wellbeing Nutrition(720P_HD).mp4" }
-            ]
+        const WA_NUMBER = "923497814918";
+        const bgm = document.getElementById('bgm-audio');
+        const sfxHover = document.getElementById('sfx-hover');
+        bgm.volume = 0.4; sfxHover.volume = 0.3;
+
+        function playHoverSound() { sfxHover.currentTime = 0; sfxHover.play().catch(()=>{}); }
+        function formatPKR(num) { return "PKR " + num.toLocaleString('en-PK'); }
+
+        const products = [
+            { id: 'AW1', name: 'Commercial Treadmill X-900', cat: 'Machinery', price: 65000, img: '/public/images/Revo-rt114-ac.jpg', vid: '/public/videos/No Matter Where You Start - NordicTrack Commercial 2950 Treadmill Powered by iFit(720P_HD).mp4' },
+            { id: 'AW2', name: 'creatine monohydrate', cat: 'Machinery', price: 14000, img: '/public/images/wellcore---pure-micronised-creatine-monohydrate-fruit-fusion-enhanced-.webp', vid: '/public/videos/Pure Creatine Monohydrate By Wellcore _ The Ultimate Muscle Fuel(720P_HD).mp4' },
+            { id: 'AW3', name: 'Olympic Hex Dumbbell Set (5-50kg)', cat: 'Free Weights', price:7500, img: '/public/images/1-PC-APOLLO-PRO-STYLE-RUBBER-DUMBBELL-2-1.jpg', vid: '/public/videos/VID_20260213175502.mp4' },
+            { id: 'AW4', name: 'Whey Isolate (10lbs)', cat: 'Supplements', price: 12000, img: 'https://images.unsplash.com/photo-1593095948071-474c5cc2989d?w=800&q=80', vid: '/public/videos/Whey protein AD _ Vlad rum video(720P_HD).mp4' },
+            { id: 'AW5', name: 'squat machine for home', cat: 'Machinery', price: 32000, img: '/public/images/Screenshot_2026-03-12-13-51-19-15_99c04817c0de5652397fc8b56c3b3817.jpg', vid: '/public/videos/RITFIT GAZELLE 3-in-1 Leg Press Hack Squat Machine for Home Gym(720P_HD).mp4' },
+            { id: 'AW6', name: 'Titanium Barbell 20kg', cat: 'Free Weights', price: 8000, img: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=800&q=80', vid: '/public/videos/Barbell Innovation since 2008 _ Full Commercial  _  8K(720P_HD).mp4' },
+            { id: 'AW7', name: 'Heavy Duty Grippers (Set of 4)', cat: 'Accessories', price: 1200, img: 'https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?w=800&q=80', vid: '/public/videos/RB Gripper ad 2(480P).mp4' },
+            { id: 'AW8', name: 'Pre-Workout RAGE Matrix', cat: 'Supplements', price: 7500, img: 'https://images.unsplash.com/photo-1550345332-09e3ac987658?w=800&q=80', vid: '/public/videos/Cinematic C4 Pre Workout Commercial(720P_HD).mp4' }
+        ];
+
+        // START BREACH SEQUENCE (Called after Google Login)
+        window.startBreachSequence = (userName) => {
+            document.getElementById('btn-breach').style.display = 'none';
+            document.getElementById('scan-progress').classList.remove('hidden');
+            document.getElementById('gate-msg').classList.remove('hidden');
+            document.getElementById('user-display').innerText = `OPERATOR: ${userName.toUpperCase()}`;
+            document.getElementById('user-display').classList.remove('hidden');
+            
+            gsap.to("#scan-bar", { width: "100%", duration: 2.5, ease: "power2.inOut", onComplete: unlockProtocol });
         };
 
-        // Initialize Backgrounds
-        document.getElementById('login-video-bg').src = CONFIG.login_bg;
-        document.getElementById('gym-video-bg').src = CONFIG.gym_bg;
+        function unlockProtocol() {
+            document.getElementById('gate-msg').innerText = "ACCESS GRANTED. WELCOME BACK.";
+            document.getElementById('gate-msg').classList.replace('text-blood-500', 'text-green-500');
+            bgm.play().then(() => { document.getElementById('audio-visualizer').style.opacity = '1'; }).catch(()=>{});
+            document.getElementById('ambient-video-layer').play().catch(()=>{});
 
-        // Load Product Grid
-        const container = document.getElementById('products-container');
-        CONFIG.vault_inventory.forEach((item, index) => {
-            const card = document.createElement('div');
-            card.className = "product-card group";
-            card.innerHTML = `
-                <video class="p-video" muted loop playsinline>
-                    <source src="${item.video}" type="video/mp4">
-                </video>
-                <div class="p-overlay"></div>
-                <div class="p-content">
-                    <div class="text-yellow-500 text-xs font-mono mb-1">ASSET_0${index + 1}</div>
-                    <h3 class="font-hud text-2xl font-bold mb-1 leading-none uppercase">${item.name}</h3>
-                    <p class="text-gray-400 text-xs mb-3">${item.desc}</p>
-                    <div class="flex justify-between items-end">
-                        <div class="text-xl font-bold font-hud">PKR ${item.price}</div>
-                        <button onclick="negotiate('${item.name}', '${item.price}')" class="btn-buy px-4 py-2 text-sm">NEGOTIATE</button>
-                    </div>
-                </div>
-            `;
-            card.addEventListener('mouseenter', () => card.querySelector('video').play());
-            card.addEventListener('mouseleave', () => card.querySelector('video').pause());
-            container.appendChild(card);
-        });
-
-        // GOOGLE AUTHENTICATION SYSTEM
-        function handleCredentialResponse(response) {
-            // Helper to decode user name from Google's secure token
-            const base64Url = response.credential.split('.')[1];
-            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-            const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-            }).join(''));
-
-            const userProfile = JSON.parse(jsonPayload);
-            enterGym(userProfile.given_name);
+            setTimeout(() => {
+                const tl = gsap.timeline();
+                tl.to("#the-gate", { opacity: 0, scale: 1.2, duration: 1.5, ease: "power3.inOut" })
+                  .set("#the-gate", { display: "none" })
+                  .set("#main-app", { display: "block", opacity: 1 })
+                  .from(".gs-reveal", { y: 60, opacity: 0, duration: 1.2, stagger: 0.2, ease: "power4.out" })
+                  .add(renderVault);
+            }, 1000);
         }
 
-        function enterGym(userName) {
-            document.getElementById('display-name').innerText = userName.toUpperCase();
-
-            gsap.to("#gate-layer", {
-                opacity: 0,
-                duration: 1.5,
-                ease: "power2.inOut",
-                onComplete: () => {
-                    document.getElementById('gate-layer').style.display = "none";
-                    const gym = document.getElementById('gym-layer');
-                    gym.classList.remove("hidden");
-                    gsap.to(gym, { opacity: 1, duration: 1 });
-                    
-                    // Entrance animation for products
-                    gsap.from(".product-card", {
-                        y: 100,
-                        opacity: 0,
-                        stagger: 0.1,
-                        duration: 0.8,
-                        ease: "back.out(1.7)"
-                    });
-                }
-            });
-        }
-
-        function negotiate(name, price) {
-            const text = `Salam AW Gym. I am in the Vault. I want to buy *${name}*. Price listed: PKR ${price}. Let's close the deal.`;
-            window.open(`https://wa.me/${CONFIG.whatsapp_number}?text=${encodeURIComponent(text)}`, '_blank');
-        }
-    </script>
-</body>
-</html>
+        function renderVault() {
+            const grid = document.getElementById('product-grid');
+            products.forEach(prod => {
+                const card = document.createElement('div');
+                card.className = "product-tile flex flex-
