@@ -5,172 +5,158 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AW GYM ENTERPRISES | The Iron Sanctuary</title>
     
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800;900&family=Montserrat:wght@200;300;400;600;800&family=Teko:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Montserrat:wght@300;600;800&family=Teko:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        blood: { 500: '#E50914', 700: '#8B0000', 900: '#3D0000' },
-                        gunmetal: { 800: '#1C1C1C', 900: '#0F0F0F', 950: '#050505' },
-                    },
-                    fontFamily: { luxury: ['"Cinzel"', 'serif'], sans: ['"Montserrat"', 'sans-serif'], ticker: ['"Teko"', 'sans-serif'] }
-                }
-            }
-        }
-    </script>
 
     <style>
-        body { background-color: #050505; color: #FFFFFF; overflow-x: hidden; user-select: none; }
-        .glass-panel { background: rgba(15, 15, 15, 0.8); backdrop-filter: blur(16px); border: 1px solid rgba(229, 9, 20, 0.2); }
-        .product-tile { border: 1px solid #1c1c1c; transition: all 0.4s ease; background: #0f0f0f; position: relative; overflow: hidden; }
-        .product-tile:hover { border-color: #E50914; transform: translateY(-5px); }
-        .product-media { height: 350px; position: relative; overflow: hidden; background: #000; }
-        .product-media img { width: 100%; height: 100%; object-fit: cover; transition: opacity 0.4s; }
-        .product-media video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.4s; }
-        .product-tile:hover video { opacity: 1; }
-        .btn-aggressive { border: 1px solid #E50914; padding: 10px 20px; text-transform: uppercase; font-weight: 800; transition: 0.3s; position: relative; z-index: 1; }
-        .btn-aggressive:hover { background: #E50914; color: black; }
+        :root { --blood: #E50914; }
+        body { background: #050505; color: white; font-family: 'Montserrat', sans-serif; overflow-x: hidden; }
+        .glass { background: rgba(15, 15, 15, 0.85); backdrop-filter: blur(12px); border: 1px solid rgba(229, 9, 20, 0.2); }
         
-        /* Chatbot Visuals */
-        #manager-chatbot { clip-path: polygon(100% 100%, 100% 100%, 100% 100%, 100% 100%); transition: clip-path 0.5s ease-in-out; }
-        #manager-chatbot.active { clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%); }
+        /* REAL SHOP ATMOSPHERE */
+        #bg-video { position: fixed; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2; opacity: 0.4; filter: saturate(0.5); }
+        .overlay { position: fixed; inset: 0; background: radial-gradient(circle, transparent 20%, #050505 95%); z-index: -1; }
+
+        .product-card { background: #0f0f0f; border: 1px solid #1c1c1c; transition: 0.4s; overflow: hidden; }
+        .product-card:hover { border-color: var(--blood); transform: scale(1.02); box-shadow: 0 0 30px rgba(229, 9, 20, 0.2); }
+        .media-box { height: 300px; position: relative; }
+        .media-box video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: 0.5s; }
+        .product-card:hover video { opacity: 1; }
+
+        /* CHATBOT PERSONAS */
+        .chat-window { position: fixed; bottom: 20px; width: 320px; height: 450px; z-index: 1000; display: none; flex-direction: column; }
+        #bot-commander { right: 20px; } /* The Aggressive Coach */
+        #bot-concierge { left: 20px; }   /* The Luxury Consultant */
+        .chat-body { flex: 1; overflow-y: auto; padding: 15px; font-size: 13px; background: rgba(0,0,0,0.9); }
+        
+        .btn-iron { border: 1px solid var(--blood); padding: 10px 20px; font-family: 'Teko'; text-transform: uppercase; letter-spacing: 2px; transition: 0.3s; }
+        .btn-iron:hover { background: var(--blood); color: black; }
     </style>
 </head>
 <body>
 
-    <audio id="bgm-audio" loop><source src="https://cdn.pixabay.com/audio/2022/03/15/audio_79808a3d54.mp3" type="audio/mpeg"></audio>
-    <audio id="sfx-hover"><source src="https://cdn.pixabay.com/audio/2022/03/15/audio_c8b8f75da0.mp3" type="audio/mpeg"></audio>
+    <audio id="main-theme" loop><source src="https://cdn.pixabay.com/audio/2022/03/15/audio_79808a3d54.mp3"></audio>
 
-    <div id="the-gate" class="fixed inset-0 z-[10000] bg-black flex items-center justify-center">
-        <div class="text-center p-10 glass-panel max-w-lg">
-            <h1 class="font-luxury text-5xl mb-8">AW GYM</h1>
-            <button id="btn-breach" class="btn-aggressive w-full">BREACH THE SANCTUARY</button>
+    <video id="bg-video" loop muted playsinline>
+        <source src="videos/lv_0_20260213174657.mp4" type="video/mp4">
+    </video>
+    <div class="overlay"></div>
+
+    <div id="login-gate" class="fixed inset-0 z-[10000] bg-black flex items-center justify-center">
+        <div class="text-center p-12 glass">
+            <h1 class="font-luxury text-4xl mb-8 tracking-tighter">AUTHENTICATE ACCESS</h1>
+            <div id="g_id_onload" data-client_id="YOUR_GOOGLE_CLIENT_ID" data-callback="handleSignIn"></div>
+            <div class="g_id_signin" data-type="standard"></div>
+            <button onclick="skipLogin()" class="block mt-6 text-gray-500 text-xs hover:underline">BYPASS (Guest Mode)</button>
         </div>
     </div>
 
-    <div id="main-app" class="hidden">
-        <header class="fixed top-0 w-full z-50 glass-panel p-4 flex justify-between items-center">
-            <div class="font-luxury text-xl">AW GYM ENTERPRISES</div>
-            <button onclick="toggleChat()" class="btn-aggressive text-xs">SUMMON THE MANAGER</button>
+    <div id="app" class="hidden">
+        <header class="p-6 flex justify-between items-center fixed top-0 w-full z-50 glass">
+            <h2 class="font-luxury text-2xl text-blood-500">AW ENTERPRISES</h2>
+            <div class="flex gap-4">
+                <button onclick="openBot('concierge')" class="text-xs font-bold uppercase tracking-widest text-gold-500">Consultant</button>
+                <button onclick="openBot('commander')" class="text-xs font-bold uppercase tracking-widest text-blood-500">The Commander</button>
+            </div>
         </header>
 
-        <section id="the-vault" class="pt-32 pb-20 px-6">
-            <h2 class="font-luxury text-4xl text-center mb-12">THE ARSENAL</h2>
-            <div id="product-grid" class="grid grid-cols-1 md:grid-cols-4 gap-8"></div>
-        </section>
+        <main class="pt-40 px-8 pb-20">
+            <div id="vault-grid" class="grid grid-cols-1 md:grid-cols-4 gap-10"></div>
+        </main>
+    </div>
 
-        <div id="manager-chatbot" class="fixed bottom-0 right-0 md:bottom-5 md:right-5 w-full md:w-80 h-[500px] glass-panel z-[9999] flex flex-col">
-            <div class="p-4 border-b border-blood-700 flex justify-between bg-black">
-                <span class="font-luxury">THE MANAGER</span>
-                <button onclick="toggleChat()" class="text-2xl">&times;</button>
-            </div>
-            <div id="chat-stream" class="flex-1 p-4 overflow-y-auto text-sm space-y-4 bg-black/80">
-                </div>
-            <div id="chat-options" class="p-4 bg-black border-t border-blood-900 flex flex-wrap gap-2">
-                </div>
+    <div id="bot-commander" class="chat-window glass">
+        <div class="p-3 border-b border-blood-900 flex justify-between items-center bg-blood-900/20">
+            <span class="font-luxury text-sm">THE COMMANDER</span>
+            <button onclick="this.parentElement.parentElement.style.display='none'">✕</button>
         </div>
+        <div id="stream-commander" class="chat-body space-y-3"></div>
+    </div>
+
+    <div id="bot-concierge" class="chat-window glass">
+        <div class="p-3 border-b border-yellow-700 flex justify-between items-center bg-yellow-900/20">
+            <span class="font-luxury text-sm">LUXURY CONCIERGE</span>
+            <button onclick="this.parentElement.parentElement.style.display='none'">✕</button>
+        </div>
+        <div id="stream-concierge" class="chat-body space-y-3"></div>
     </div>
 
     <script>
         const WA_NUMBER = "923497814918";
-        
+
+        // PRODUCT LIST (8 Items + 8 Videos)
         const products = [
-            { id: 'AW1', name: 'Commercial Treadmill', price: 350000, img: 'images/Revo-rt114-ac.jpg', vid: 'videos/No Matter Where You Start - NordicTrack Commercial 2950 Treadmill Powered by iFit(720P_HD).mp4' },
-            { id: 'AW2', name: 'Creatine Monohydrate', price: 7000, img: 'images/wellcore---pure-micronised-creatine-monohydrate-fruit-fusion-enhanced-.webp', vid: 'videos/Pure Creatine Monohydrate By Wellcore _ The Ultimate Muscle Fuel(720P_HD).mp4' },
-            { id: 'AW3', name: 'Hex Dumbbells (12.5kg)', price: 7500, img: 'images/1-PC-APOLLO-PRO-STYLE-RUBBER-DUMBBELL-2-1.jpg', vid: 'videos/VID_20260213175502.mp4' },
-            { id: 'AW4', name: 'Whey Protein (1kg)', price: 11000, img: 'https://images.unsplash.com/photo-1593095948071-474c5cc2989d?w=800&q=80', vid: 'videos/Whey protein AD _ Vlad rum video(720P_HD).mp4' },
-            { id: 'AW5', name: 'Heavy Duty Squat Rack', price: 90000, img: 'images/Screenshot_2026-03-12-13-51-19-15_99c04817c0de5652397fc8b56c3b3817.jpg', vid: 'videos/RITFIT GAZELLE 3-in-1 Leg Press Hack Squat Machine for Home Gym(720P_HD).mp4' },
-            { id: 'AW6', name: 'Hex Dumbbells (20kg)', price: 12000, img: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=800&q=80', vid: 'videos/Barbell Innovation since 2008 _ Full Commercial  _  8K(720P_HD).mp4' },
-            { id: 'AW7', name: 'Air Bike', price: 90000, img: 'https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?w=800&q=80', vid: 'videos/RB Gripper ad 2(480P).mp4' },
-            { id: 'AW8', name: 'Pre-Workout Rage', price: 9000, img: 'https://images.unsplash.com/photo-1550345332-09e3ac987658?w=800&q=80', vid: 'videos/Cinematic C4 Pre Workout Commercial(720P_HD).mp4' }
+            { id: 1, name: 'Commercial Treadmill', price: 350000, img: 'images/Revo-rt114-ac.jpg', vid: 'videos/No Matter Where You Start - NordicTrack Commercial 2950 Treadmill Powered by iFit(720P_HD).mp4' },
+            { id: 2, name: 'Creatine Monohydrate', price: 7000, img: 'images/wellcore---pure-micronised-creatine-monohydrate-fruit-fusion-enhanced-.webp', vid: 'videos/Pure Creatine Monohydrate By Wellcore _ The Ultimate Muscle Fuel(720P_HD).mp4' },
+            { id: 3, name: '12.5kg Hex Dumbbells', price: 7500, img: 'images/1-PC-APOLLO-PRO-STYLE-RUBBER-DUMBBELL-2-1.jpg', vid: 'videos/VID_20260213175502.mp4' },
+            { id: 4, name: 'Whey Protein (1kg)', price: 11000, img: 'https://images.unsplash.com/photo-1593095948071-474c5cc2989d?w=800&q=80', vid: 'videos/Whey protein AD _ Vlad rum video(720P_HD).mp4' },
+            { id: 5, name: 'Heavy Squat Rack', price: 90000, img: 'images/Screenshot_2026-03-12-13-51-19-15_99c04817c0de5652397fc8b56c3b3817.jpg', vid: 'videos/RITFIT GAZELLE 3-in-1 Leg Press Hack Squat Machine for Home Gym(720P_HD).mp4' },
+            { id: 6, name: '20kg Hex Dumbbells', price: 12000, img: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=800&q=80', vid: 'videos/Barbell Innovation since 2008 _ Full Commercial  _  8K(720P_HD).mp4' },
+            { id: 7, name: 'Air Bike', price: 90000, img: 'https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?w=800&q=80', vid: 'videos/RB Gripper ad 2(480P).mp4' },
+            { id: 8, name: 'Pre-Workout Rage', price: 9000, img: 'https://images.unsplash.com/photo-1550345332-09e3ac987658?w=800&q=80', vid: 'videos/Cinematic C4 Pre Workout Commercial(720P_HD).mp4' }
         ];
 
-        // --- CORE LOGIC ---
-        document.getElementById('btn-breach').addEventListener('click', () => {
-            document.getElementById('bgm-audio').play();
-            gsap.to("#the-gate", { opacity: 0, display: "none", duration: 1 });
-            document.getElementById('main-app').classList.remove('hidden');
-            gsap.to("#main-app", { opacity: 1, duration: 1 });
+        // BOT SCRIPTS (7 Sentences Each)
+        const scripts = {
+            commander: [
+                "Stop looking and start lifting.", "This equipment is built for warriors, not hobbyists.", "Every machine here is a tool for total domination.", "If you want the best price, you better be serious about your gains.", "Negotiate with me on WhatsApp, but don't waste my time.", "The Treadmill is the heart of your cardio war.", "Choose your weapon now."
+            ],
+            concierge: [
+                "Welcome to a world of elite fitness engineering.", "We specialize in curating the finest equipment for the refined athlete.", "Your home sanctuary deserves nothing less than perfection.", "Notice the craftsmanship in our commercial-grade racks.", "I can assist you with a private consultation regarding delivery.", "Investing in your health is the ultimate form of luxury.", "How may I elevate your training experience today?"
+            ]
+        };
+
+        function handleSignIn(response) { skipLogin(); }
+        function skipLogin() {
+            gsap.to("#login-gate", { opacity: 0, display: "none" });
+            document.getElementById('app').classList.remove('hidden');
+            document.getElementById('main-theme').play();
+            document.getElementById('bg-video').play();
             renderVault();
-            setTimeout(initManager, 1000);
-        });
+        }
 
         function renderVault() {
-            const grid = document.getElementById('product-grid');
+            const grid = document.getElementById('vault-grid');
             products.forEach(p => {
-                const div = document.createElement('div');
-                div.className = "product-tile p-4";
-                div.innerHTML = `
-                    <div class="product-media"><img src="${p.img}"><video src="${p.vid}" loop muted playsinline></video></div>
+                const card = document.createElement('div');
+                card.className = "product-card p-4";
+                card.innerHTML = `
+                    <div class="media-box">
+                        <img src="${p.img}" class="w-full h-full object-cover">
+                        <video src="${p.vid}" loop muted playsinline></video>
+                    </div>
                     <h3 class="font-luxury mt-4 text-lg">${p.name}</h3>
-                    <p class="text-blood-500 font-ticker text-3xl">PKR ${p.price.toLocaleString()}</p>
-                    <button onclick="negotiate('${p.name}', ${p.price})" class="btn-aggressive w-full mt-4">NEGOTIATE</button>
+                    <p class="font-ticker text-2xl text-blood-500">PKR ${p.price.toLocaleString()}</p>
+                    <button onclick="negotiate('${p.name}')" class="btn-iron w-full mt-4">NEGOTIATE</button>
                 `;
-                grid.appendChild(div);
-                div.onmouseenter = () => div.querySelector('video').play();
-                div.onmouseleave = () => div.querySelector('video').pause();
+                grid.appendChild(card);
+                card.onmouseenter = () => card.querySelector('video').play();
+                card.onmouseleave = () => card.querySelector('video').pause();
             });
         }
 
-        // --- CHAT SYSTEM LOGIC ---
-        function toggleChat() { document.getElementById('manager-chatbot').classList.toggle('active'); }
-
-        function initManager() {
-            appendMsg("Manager", "Welcome to AW GYM. We don't deal in mediocrity. What are you building?");
-            showOptions(["Commercial Empire", "Personal Sanctuary", "Supplements"]);
-        }
-
-        function appendMsg(sender, text) {
-            const stream = document.getElementById('chat-stream');
-            const msg = document.createElement('div');
-            msg.innerHTML = `<p class="${sender === 'Manager' ? 'text-blood-500' : 'text-white text-right'}"><b>${sender}:</b> ${text}</p>`;
-            stream.appendChild(msg);
-            stream.scrollTop = stream.scrollHeight;
-        }
-
-        function showOptions(opts) {
-            const container = document.getElementById('chat-options');
-            container.innerHTML = '';
-            opts.forEach(opt => {
-                const btn = document.createElement('button');
-                btn.className = "text-[10px] border border-blood-500 px-2 py-1 hover:bg-blood-500 hover:text-black transition";
-                btn.innerText = opt;
-                btn.onclick = () => handleChoice(opt);
-                container.appendChild(btn);
+        function openBot(type) {
+            const win = document.getElementById('bot-' + type);
+            const stream = document.getElementById('stream-' + type);
+            win.style.display = 'flex';
+            stream.innerHTML = '';
+            scripts[type].forEach((text, i) => {
+                setTimeout(() => {
+                    const msg = document.createElement('p');
+                    msg.className = "bg-white/5 p-2 rounded border-l-2 " + (type==='commander' ? 'border-red-600':'border-yellow-600');
+                    msg.innerText = text;
+                    stream.appendChild(msg);
+                    stream.scrollTop = stream.scrollHeight;
+                }, i * 1500);
             });
         }
 
-        function handleChoice(choice) {
-            appendMsg("You", choice);
-            document.getElementById('chat-options').innerHTML = ''; 
-            
-            setTimeout(() => {
-                if(choice === "Commercial Empire") {
-                    appendMsg("Manager", "Heavy artillery is required. Look at the Treadmill and Squat Rack. We can negotiate bulk pricing on WhatsApp.");
-                } else if(choice === "Personal Sanctuary") {
-                    appendMsg("Manager", "A private prison for gains. The Hex Dumbbells are your best friend. Click 'Negotiate' on any item.");
-                } else {
-                    appendMsg("Manager", "Fuel for the engine. Our Whey and Creatine are pharmaceutical grade.");
-                }
-                appendMsg("Manager", "Click below to talk to me directly on WhatsApp.");
-                showOptions(["TALK ON WHATSAPP"]);
-                document.querySelector('#chat-options button').onclick = () => waGeneral();
-            }, 1000);
-        }
-
-        function negotiate(item, price) {
-            window.open(`https://wa.me/${WA_NUMBER}?text=I want to negotiate the ${item} for PKR ${price.toLocaleString()}`, '_blank');
-        }
-
-        function waGeneral() {
-            window.open(`https://wa.me/${WA_NUMBER}?text=I need a consultation for my gym.`, '_blank');
+        function negotiate(item) {
+            window.open(`https://wa.me/${WA_NUMBER}?text=I am at the shop. I want to buy the ${item}.`, '_blank');
         }
     </script>
 </body>
