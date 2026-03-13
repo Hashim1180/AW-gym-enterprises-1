@@ -3,48 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AW GYM ENTERPRISES | THE ZENITH 2026</title>
+    <title>AW GYM ENTERPRISES | THE ZENITH</title>
     
     <script src="https://accounts.google.com/gsi/client" async defer></script>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Montserrat:wght@100;300;800&family=Teko:wght@300;600&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Montserrat:wght@100;300;400;800&family=Teko:wght@300;600&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
 
     <style>
-        :root { --blood: #E50914; --bg: #050505; }
-        * { cursor: none !important; }
-        body { background: var(--bg); color: white; font-family: 'Montserrat', sans-serif; overflow-x: hidden; }
+        :root { --blood: #E50914; --gold: #D4AF37; }
+        * { cursor: none !important; margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #000; color: white; font-family: 'Montserrat', sans-serif; overflow: hidden; }
         
-        /* CUSTOM CURSOR */
-        #cursor { position: fixed; width: 8px; height: 8px; background: var(--blood); border-radius: 50%; pointer-events: none; z-index: 100001; transition: transform 0.1s; }
-        #cursor-f { position: fixed; width: 35px; height: 35px; border: 1px solid var(--blood); border-radius: 50%; pointer-events: none; z-index: 100000; transition: transform 0.2s cubic-bezier(0.17, 0.67, 0.83, 0.67); }
+        /* CUSTOM CURSOR SYSTEM */
+        #cursor { position: fixed; width: 8px; height: 8px; background: var(--blood); border-radius: 50%; pointer-events: none; z-index: 100001; }
+        #cursor-f { position: fixed; width: 40px; height: 40px; border: 1px solid var(--blood); border-radius: 50%; pointer-events: none; z-index: 100000; transition: transform 0.15s ease-out; }
 
-        /* INTRO ANIMATION */
-        #intro { position: fixed; inset: 0; z-index: 9999; background: #000; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: transform 1.2s cubic-bezier(1, 0, 0, 1); }
-        .glitch { font-family: 'Cinzel', serif; font-size: 4vw; letter-spacing: 2rem; color: white; text-transform: uppercase; }
+        /* 8-SECOND CINEMATIC INTRO */
+        #intro-terminal { position: fixed; inset: 0; z-index: 9999; background: #000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .matrix-text { font-family: 'Teko'; color: var(--blood); letter-spacing: 0.5rem; font-size: 1.5rem; opacity: 0; }
+        .main-logo { font-family: 'Cinzel'; font-size: 6vw; letter-spacing: 2rem; opacity: 0; filter: blur(20px); }
+        .scan-line { width: 100%; height: 2px; background: var(--blood); position: absolute; top: 0; box-shadow: 0 0 20px var(--blood); display: none; }
 
-        /* ATMOSPHERE */
-        #main-bg-video { position: fixed; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -10; opacity: 0.25; filter: contrast(1.2) brightness(0.5); }
+        /* ATMOSPHERE LAYER */
+        #bg-video-main { position: fixed; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -10; opacity: 0; transition: opacity 2s; filter: brightness(0.4) contrast(1.2) grayscale(0.5); }
         .vignette { position: fixed; inset: 0; background: radial-gradient(circle, transparent 20%, #000 100%); z-index: -5; pointer-events: none; }
 
-        /* PRODUCT CARDS */
-        .card-arsenal { background: rgba(10, 10, 10, 0.7); border: 1px solid #1a1a1a; backdrop-filter: blur(10px); transition: all 0.5s ease; position: relative; overflow: hidden; }
-        .card-arsenal:hover { border-color: var(--blood); transform: translateY(-10px); box-shadow: 0 10px 30px rgba(229, 9, 20, 0.3); }
-        .media-container { height: 380px; position: relative; overflow: hidden; border-bottom: 1px solid #222; }
-        .media-container video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.6s ease; }
-        .card-arsenal:hover video { opacity: 1; }
+        /* PRODUCT VAULT */
+        .vault-card { background: rgba(15, 15, 15, 0.7); border: 1px solid #222; backdrop-filter: blur(15px); transition: 0.5s cubic-bezier(0.17, 0.67, 0.83, 0.67); }
+        .vault-card:hover { border-color: var(--blood); transform: scale(1.03) translateY(-10px); box-shadow: 0 20px 50px rgba(229, 9, 20, 0.2); }
+        .video-container { height: 420px; position: relative; overflow: hidden; }
+        .video-container video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: 0.8s; }
+        .vault-card:hover video { opacity: 1; }
 
-        /* BOTS */
-        .bot-panel { position: fixed; bottom: -600px; width: 340px; height: 480px; z-index: 2000; transition: bottom 0.8s cubic-bezier(0.16, 1, 0.3, 1); border: 1px solid rgba(255, 0, 0, 0.2); background: rgba(0,0,0,0.98); }
-        .bot-panel.active { bottom: 20px; }
-        .bot-log { height: 350px; overflow-y: auto; padding: 20px; font-size: 11px; font-family: 'Montserrat'; scrollbar-width: none; }
-        .bot-log p { margin-bottom: 12px; border-left: 2px solid var(--blood); padding-left: 10px; opacity: 0; transform: translateX(-10px); animation: slideIn 0.5s forwards; }
-        @keyframes slideIn { to { opacity: 1; transform: translateX(0); } }
-
-        .btn-zenith { border: 1px solid var(--blood); padding: 12px 24px; font-family: 'Teko'; letter-spacing: 3px; text-transform: uppercase; transition: 0.4s; background: transparent; }
-        .btn-zenith:hover { background: var(--blood); color: black; box-shadow: 0 0 15px var(--blood); }
+        /* DUAL BOTS */
+        .bot-frame { position: fixed; bottom: -600px; width: 350px; height: 500px; z-index: 2000; background: rgba(0,0,0,0.95); border: 1px solid #333; transition: 0.8s cubic-bezier(1, 0, 0, 1); }
+        .bot-frame.active { bottom: 20px; }
+        .bot-header { padding: 15px; font-family: 'Cinzel'; font-size: 10px; border-bottom: 1px solid #222; letter-spacing: 2px; }
+        .bot-content { height: 380px; overflow-y: auto; padding: 20px; font-size: 12px; line-height: 1.6; }
+        .bot-content p { margin-bottom: 15px; padding-left: 10px; border-left: 1px solid var(--blood); animation: fadeIn 0.5s forwards; }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateX(-5px); } to { opacity: 1; transform: translateX(0); } }
+        .btn-luxury { border: 1px solid var(--blood); padding: 15px 40px; font-family: 'Teko'; font-size: 1.5rem; letter-spacing: 5px; text-transform: uppercase; transition: 0.4s; position: relative; }
+        .btn-luxury:hover { background: var(--blood); color: #000; box-shadow: 0 0 30px var(--blood); }
     </style>
 </head>
 <body>
@@ -52,102 +53,102 @@
     <div id="cursor"></div>
     <div id="cursor-f"></div>
 
-    <audio id="bg-music" loop><source src="music/theme.mp3" type="audio/mpeg"></audio>
+    <audio id="sfx-entry"><source src="https://cdn.pixabay.com/audio/2022/03/24/audio_7306263435.mp3"></audio>
 
-    <div id="intro">
-        <div class="glitch mb-12">AW GYM</div>
-        <div id="g_id_onload" data-client_id="YOUR_GOOGLE_CLIENT_ID" data-callback="handleAuth"></div>
-        <div class="g_id_signin mb-6" data-type="standard"></div>
-        <button onclick="enterSanctuary()" class="btn-zenith">BREACH THE VAULT</button>
-        <div class="mt-8 text-[9px] tracking-[0.8em] text-red-600 animate-pulse">ENCRYPTED CONNECTION ESTABLISHED</div>
+    <div id="intro-terminal">
+        <div class="scan-line" id="scanner"></div>
+        <div class="matrix-text mb-4" id="m1">ENCRYPTED CONNECTION...</div>
+        <div class="matrix-text mb-8" id="m2">AUTHORIZING AW_ENTERPRISES_VAULT...</div>
+        <div class="main-logo text-white" id="logo">AW GYM</div>
+        <div id="g_id_onload" data-client_id="YOUR_ID" data-callback="handleAuth" class="mt-10 opacity-0" id="g-login"></div>
+        <div class="g_id_signin mt-10 opacity-0" id="g-btn"></div>
+        <button id="enter-btn" onclick="initiateBreach()" class="btn-luxury opacity-0 mt-10">ENTER THE SANCTUARY</button>
     </div>
 
-    <div id="main-app" class="hidden opacity-0 transition-opacity duration-1000">
-        <video id="main-bg-video" loop muted playsinline><source src="videos/lv_0_20260213174657.mp4"></video>
+    <div id="shop-ui" class="hidden">
+        <video id="bg-video-main" loop muted playsinline><source src="videos/lv_0_20260213174657.mp4"></video>
         <div class="vignette"></div>
 
-        <nav class="fixed top-0 w-full p-8 flex justify-between items-center z-50 glass">
-            <div class="font-luxury text-2xl tracking-tighter">AW <span class="text-red-600">ENTERPRISES</span></div>
-            <div class="flex gap-8">
-                <button onclick="toggleBot('oracle')" class="text-[10px] tracking-widest uppercase text-gray-400 hover:text-white">The Oracle</button>
-                <button onclick="toggleBot('warden')" class="text-[10px] tracking-widest uppercase text-red-600 hover:text-white">The Warden</button>
+        <nav class="fixed top-0 w-full p-10 flex justify-between items-center z-50">
+            <div class="font-luxury text-3xl tracking-tighter">AW <span class="text-red-600">SANCTUARY</span></div>
+            <div class="flex gap-12 font-teko text-xl tracking-widest">
+                <button onclick="toggleBot('oracle')" class="hover:text-red-600 transition">THE ORACLE</button>
+                <button onclick="toggleBot('warden')" class="hover:text-red-600 transition">THE WARDEN</button>
             </div>
         </nav>
 
-        <main class="relative pt-48 px-8 md:px-20 pb-24">
-            <div class="mb-20">
-                <h1 class="font-luxury text-7xl md:text-9xl opacity-10 absolute -top-10 left-0">ARSENAL</h1>
-                <p class="text-red-600 tracking-[1rem] uppercase text-xs">Market Index 2026</p>
-            </div>
-            <div id="vault-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12"></div>
+        <main class="pt-48 px-10 pb-20">
+            <div id="product-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12"></div>
         </main>
     </div>
 
-    <div id="bot-warden" class="bot-panel right-5 md:right-10">
-        <div class="p-4 bg-red-900/30 font-luxury text-[10px] flex justify-between items-center">
-            <span>// TACTICAL WARDEN</span>
-            <button onclick="this.parentElement.parentElement.classList.remove('active')">[X]</button>
-        </div>
-        <div id="warden-log" class="bot-log text-red-500"></div>
+    <div id="bot-warden" class="bot-frame right-10">
+        <div class="bot-header bg-red-950 text-red-500">// TACTICAL WARDEN ACTIVE</div>
+        <div id="warden-log" class="bot-content text-red-600"></div>
     </div>
 
-    <div id="bot-oracle" class="bot-panel left-5 md:left-10">
-        <div class="p-4 bg-white/5 font-luxury text-[10px] flex justify-between items-center">
-            <span>// LUXURY ORACLE</span>
-            <button onclick="this.parentElement.parentElement.classList.remove('active')">[X]</button>
-        </div>
-        <div id="oracle-log" class="bot-log text-gray-400 italic"></div>
+    <div id="bot-oracle" class="bot-frame left-10">
+        <div class="bot-header bg-neutral-900 text-neutral-400">// ELITE ORACLE ACTIVE</div>
+        <div id="oracle-log" class="bot-content text-neutral-400 italic"></div>
     </div>
 
     <script>
         // CURSOR
-        const c = document.getElementById('cursor'), f = document.getElementById('cursor-f');
+        const cur = document.getElementById('cursor'), fol = document.getElementById('cursor-f');
         document.addEventListener('mousemove', (e) => {
-            c.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
-            f.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
+            gsap.to(cur, {x: e.clientX, y: e.clientY, duration: 0});
+            gsap.to(fol, {x: e.clientX - 16, y: e.clientY - 16, duration: 0.15});
         });
 
-        // 8 PRODUCT VIDEOS (9th is background)
-        const inventory = [
+        // 8-SECOND COMPLEX INTRO ANIMATION
+        window.onload = () => {
+            const tl = gsap.timeline();
+            tl.to("#scanner", { display: "block", top: "100%", duration: 2, ease: "none" })
+              .to("#m1", { opacity: 1, duration: 0.5 })
+              .to("#m2", { opacity: 1, duration: 0.5 }, "-=0.2")
+              .to("#logo", { opacity: 1, filter: "blur(0px)", duration: 2, ease: "power4.out" })
+              .to("#g-login, #g-btn, #enter-btn", { opacity: 1, duration: 1, stagger: 0.3 });
+        };
+
+        const products = [
             { name: 'Commercial Treadmill', price: 350000, vid: 'videos/No Matter Where You Start - NordicTrack Commercial 2950 Treadmill Powered by iFit(720P_HD).mp4', img: 'images/Revo-rt114-ac.jpg' },
-            { name: 'Pure Creatine (300g)', price: 7000, vid: 'videos/Pure Creatine Monohydrate By Wellcore _ The Ultimate Muscle Fuel(720P_HD).mp4', img: 'images/wellcore---pure-micronised-creatine-monohydrate-fruit-fusion-enhanced-.webp' },
+            { name: 'Creatine Monohydrate', price: 7000, vid: 'videos/Pure Creatine Monohydrate By Wellcore _ The Ultimate Muscle Fuel(720P_HD).mp4', img: 'images/wellcore---pure-micronised-creatine-monohydrate-fruit-fusion-enhanced-.webp' },
             { name: '12.5kg Hex Dumbbells', price: 7500, vid: 'videos/VID_20260213175502.mp4', img: 'images/1-PC-APOLLO-PRO-STYLE-RUBBER-DUMBBELL-2-1.jpg' },
-            { name: 'Whey Protein Matrix', price: 11000, vid: 'videos/Whey protein AD _ Vlad rum video(720P_HD).mp4', img: 'https://images.unsplash.com/photo-1593095948071-474c5cc2989d?w=800' },
+            { name: 'Whey Protein 1kg', price: 11000, vid: 'videos/Whey protein AD _ Vlad rum video(720P_HD).mp4', img: 'https://images.unsplash.com/photo-1593095948071-474c5cc2989d?w=800' },
             { name: 'Heavy Squat Rack', price: 90000, vid: 'videos/RITFIT GAZELLE 3-in-1 Leg Press Hack Squat Machine for Home Gym(720P_HD).mp4', img: 'images/Screenshot_2026-03-12-13-51-19-15_99c04817c0de5652397fc8b56c3b3817.jpg' },
             { name: '20kg Hex Dumbbells', price: 12000, vid: 'videos/Barbell Innovation since 2008 _ Full Commercial  _  8K(720P_HD).mp4', img: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=800' },
             { name: 'Air Bike Elite', price: 90000, vid: 'videos/RB Gripper ad 2(480P).mp4', img: 'https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?w=800' },
-            { name: 'Pre-Workout Rage', price: 9000, vid: 'videos/Cinematic C4 Pre Workout Commercial(720P_HD).mp4', img: 'https://images.unsplash.com/photo-1550345332-09e3ac987658?w=800' }
+            { name: 'Pre-Workout Matrix', price: 9000, vid: 'videos/Cinematic C4 Pre Workout Commercial(720P_HD).mp4', img: 'https://images.unsplash.com/photo-1550345332-09e3ac987658?w=800' }
         ];
 
         const scripts = {
-            warden: ["PROTOCOL INITIATED.", "This isn't a playground, it's an armory.", "The 350,000 PKR Treadmill is for those who never stop.", "Secure your assets or get out of the way.", "We negotiate only with those serious about iron.", "WhatsApp is the secure line. Use it.", "VICTORY REQUIRES SACRIFICE."],
-            oracle: ["Welcome to the sanctuary of excellence.", "We provide the engineering; you provide the will.", "Our 11,000 PKR Whey is the gold standard of recovery.", "Note the industrial precision of our heavy-duty racks.", "Every investment here is an investment in your legacy.", "Shall I prepare a bespoke quote for your facility?", "Your evolution begins with the right equipment."]
+            warden: ["SYSTEM BREACHED.", "Mediocrity is not permitted in this vault.", "The 350k Treadmill is built for absolute warfare.", "Our 12.5kg dumbbells are weapons of mass growth.", "You want a deal? Prove you're worth my time.", "Direct line to my WhatsApp is open for negotiation.", "SECURE THE IRON NOW."],
+            oracle: ["Welcome to the pinnacle of fitness luxury.", "Your home sanctuary deserves the world's finest engineering.", "Our 11,000 PKR Whey is the essence of recovery.", "Experience industrial perfection with our 90k squat racks.", "Every item here is a masterpiece of strength.", "May I prepare a bespoke inventory list for you?", "True power lies in the right equipment."]
         };
 
-        function enterSanctuary() {
-            document.getElementById('bg-music').play().catch(()=>{});
-            document.getElementById('intro').style.transform = 'translateY(-100%)';
-            document.getElementById('main-app').classList.remove('hidden');
-            setTimeout(() => {
-                document.getElementById('main-app').classList.add('opacity-100');
-                document.getElementById('main-bg-video').play();
+        function initiateBreach() {
+            document.getElementById('sfx-entry').play();
+            gsap.to("#intro-terminal", { y: "-100%", duration: 1.5, ease: "expo.inOut", onComplete: () => {
+                document.getElementById('shop-ui').classList.remove('hidden');
+                document.getElementById('bg-video-main').style.opacity = "0.3";
+                document.getElementById('bg-video-main').play();
                 renderVault();
-            }, 600);
+            }});
         }
 
         function renderVault() {
-            const grid = document.getElementById('vault-grid');
-            inventory.forEach(p => {
+            const grid = document.getElementById('product-grid');
+            products.forEach(p => {
                 const card = document.createElement('div');
-                card.className = "card-arsenal p-6";
+                card.className = "vault-card p-6";
                 card.innerHTML = `
-                    <div class="media-container">
-                        <img src="${p.img}" class="w-full h-full object-cover grayscale">
+                    <div class="video-container">
+                        <img src="${p.img}" class="w-full h-full object-cover grayscale opacity-50">
                         <video src="${p.vid}" loop muted playsinline></video>
                     </div>
-                    <h4 class="font-luxury mt-6 text-xl tracking-widest uppercase">${p.name}</h4>
-                    <p class="font-teko text-3xl text-red-600 mb-6">PKR ${p.price.toLocaleString()}</p>
-                    <button onclick="negotiate('${p.name}')" class="btn-zenith w-full">NEGOTIATE</button>
+                    <h3 class="font-luxury mt-8 text-xl tracking-widest">${p.name}</h3>
+                    <p class="font-teko text-4xl text-red-600 mb-6">PKR ${p.price.toLocaleString()}</p>
+                    <button onclick="negotiate('${p.name}')" class="btn-luxury w-full text-sm py-3">NEGOTIATE</button>
                 `;
                 grid.appendChild(card);
                 card.onmouseenter = () => card.querySelector('video').play();
@@ -156,26 +157,26 @@
         }
 
         function toggleBot(type) {
-            document.querySelectorAll('.bot-panel').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.bot-frame').forEach(b => b.classList.remove('active'));
             const win = document.getElementById('bot-' + type);
             win.classList.add('active');
             const log = document.getElementById(type + '-log');
             log.innerHTML = '';
-            scripts[type].forEach((line, i) => {
+            scripts[type].forEach((text, i) => {
                 setTimeout(() => {
                     const p = document.createElement('p');
-                    p.innerText = line;
+                    p.innerText = text;
                     log.appendChild(p);
                     log.scrollTop = log.scrollHeight;
-                }, i * 1500);
+                }, i * 1400);
             });
         }
 
         function negotiate(item) {
-            window.open(`https://wa.me/923497814918?text=AW Manager, I am securing the ${item} from the Vault.`, '_blank');
+            window.open(`https://wa.me/923497814918?text=I am securing the ${item} from the Vault.`, '_blank');
         }
 
-        function handleAuth(r) { enterSanctuary(); }
+        function handleAuth(r) { initiateBreach(); }
     </script>
 </body>
 </html>
