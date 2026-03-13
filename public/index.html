@@ -80,18 +80,12 @@
         .btn-aggressive:hover::before { left: 0; }
 
         .price-ticker { font-family: 'Teko', sans-serif; font-size: 2.5rem; line-height: 1; letter-spacing: 1px; }
-        #manager-chatbot { clip-path: polygon(100% 100%, 100% 100%, 100% 100%, 100% 100%); transition: clip-path 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
-        #manager-chatbot.active { clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%); }
-        .marquee-container { border-top: 1px solid #3D0000; border-bottom: 1px solid #3D0000; background: #050505; }
     </style>
 </head>
-<body class="selection:bg-blood-500 selection:text-white">
+<body>
 
     <audio id="bgm-audio" loop preload="auto">
         <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_79808a3d54.mp3" type="audio/mpeg">
-    </audio>
-    <audio id="sfx-hover" preload="auto">
-        <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_c8b8f75da0.mp3" type="audio/mpeg">
     </audio>
 
     <div id="audio-visualizer">
@@ -101,183 +95,80 @@
     <div id="the-gate">
         <div class="cyber-grid"></div>
         <div class="relative z-10 flex flex-col items-center text-center p-8 glass-panel max-w-xl mx-4">
-            <svg class="w-20 h-20 text-blood-500 mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
-            </svg>
-            <h2 class="font-sans text-[10px] tracking-[0.5em] text-blood-500 mb-2 uppercase">Protocol: Iron Sanctuary</h2>
-            <h1 class="font-luxury text-4xl md:text-5xl text-white mb-6 glitch-text" data-text="SECURITY CHECK">SECURITY CHECK</h1>
-            <p class="font-sans text-xs text-gray-400 mb-10 tracking-widest leading-loose">IDENTIFY YOURSELF. ACCESSING THE AW GYM SECURE MAINFRAME.</p>
-            <button id="btn-breach" class="btn-aggressive w-full" onmouseenter="playHoverSound()">BREACH THE SANCTUARY</button>
+            <h1 class="font-luxury text-4xl text-white mb-6 glitch-text" data-text="AW GYM">AW GYM</h1>
+            <button id="btn-breach" class="btn-aggressive w-full">BREACH THE SANCTUARY</button>
             <div id="scan-progress" class="w-full h-1 bg-gunmetal-900 mt-8 overflow-hidden hidden">
                 <div class="h-full bg-blood-500 w-0" id="scan-bar"></div>
             </div>
-            <p id="gate-msg" class="text-[10px] font-sans text-blood-500 mt-4 tracking-[0.3em] uppercase hidden">Initiating Override...</p>
         </div>
     </div>
 
     <video id="ambient-video-layer" loop muted playsinline>
-        <source src="/public/videos/lv_0_20260213174657.mp4" type="video/mp4">
+        <source src="videos/lv_0_20260213174657.mp4" type="video/mp4">
     </video>
     <div class="red-overlay"></div>
 
     <div id="main-app" class="hidden opacity-0">
-        <header class="fixed top-0 w-full z-50 glass-panel border-b-0">
-            <div class="flex justify-between items-center px-6 md:px-12 py-5">
-                <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 bg-blood-500 flex items-center justify-center font-luxury text-2xl font-black text-black">AW</div>
-                    <div class="hidden md:flex flex-col">
-                        <span class="font-luxury text-xl tracking-[0.2em] text-white">AW GYM ENTERPRISES</span>
-                        <span class="font-sans text-[8px] tracking-[0.4em] text-blood-500 uppercase">Commercial & Personal Arsenal</span>
-                    </div>
-                </div>
-                <button onclick="toggleChat()" class="btn-aggressive px-6 py-2 text-[10px]" onmouseenter="playHoverSound()">SUMMON THE MANAGER</button>
+        <header class="fixed top-0 w-full z-50 glass-panel">
+            <div class="flex justify-between items-center px-6 py-5">
+                <div class="font-luxury text-2xl text-white tracking-widest">AW GYM ENTERPRISES</div>
             </div>
-            <div class="marquee-container overflow-hidden flex whitespace-nowrap py-1.5">
-                <div class="animate-[marquee_15s_linear_infinite] font-sans text-[10px] tracking-[0.4em] text-blood-500 font-bold uppercase">
-                    Dominate your limits • Build your empire • Heavy duty arsenal • No excuses • Pakistan's Elite Equipment •
-                    Dominate your limits • Build your empire • Heavy duty arsenal • No excuses • Pakistan's Elite Equipment •
-                </div>
-            </div>
-            <style> @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } } </style>
         </header>
 
-        <section class="h-screen flex flex-col items-center justify-center text-center relative px-4 pt-20 z-10">
-            <div class="absolute inset-0 bg-blood-gradient z-[-1]"></div>
-            <p class="gs-reveal font-sans text-[12px] tracking-[0.8em] text-blood-500 font-bold mb-6 uppercase">Forged in Pain</p>
-            <h1 class="gs-reveal font-luxury text-6xl md:text-8xl lg:text-[9rem] text-white leading-[0.9] mb-8 uppercase">BUILD YOUR <br><span class="text-transparent bg-clip-text bg-gradient-to-r from-blood-700 via-blood-500 to-white">EMPIRE</span></h1>
-            <p class="gs-reveal font-sans text-gray-300 max-w-3xl text-sm tracking-widest leading-loose mb-12">Architecture of discipline. Commercial-grade machinery and elite supplementation.</p>
-            <a href="#the-vault" class="gs-reveal btn-aggressive px-12 py-5 text-sm" onmouseenter="playHoverSound()">ENTER THE ARSENAL</a>
-        </section>
-
-        <section id="the-vault" class="py-32 px-4 md:px-12 lg:px-20 relative bg-gunmetal-950/90 border-t border-blood-900/50">
-            <div class="flex flex-col md:flex-row justify-between items-end border-b border-blood-900/50 pb-8 mb-16 gs-reveal">
-                <div>
-                    <h2 class="font-luxury text-4xl md:text-6xl text-white tracking-[0.1em]">THE ARSENAL</h2>
-                    <p class="font-sans text-[10px] tracking-[0.4em] text-blood-500 mt-2">SECURE YOUR ASSETS. NO CART. DIRECT NEGOTIATION.</p>
-                </div>
-                <div class="text-right">
-                    <p class="font-sans text-[10px] tracking-[0.3em] text-gray-400">MARKET INDEX 2026</p>
-                    <p class="font-ticker text-3xl text-blood-500 animate-pulse" id="sys-time">00:00:00</p>
-                </div>
-            </div>
+        <section id="the-vault" class="py-32 px-4 md:px-12 lg:px-20 relative">
+            <h2 class="font-luxury text-4xl text-white mb-16 text-center">THE ARSENAL</h2>
             <div id="product-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8"></div>
         </section>
-
-        <footer class="bg-[#020202] py-20 px-6 border-t border-blood-900 relative">
-            <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-10">
-                <div class="text-center md:text-left">
-                    <h2 class="font-luxury text-4xl text-white mb-2 tracking-widest">AW GYM ENTERPRISES</h2>
-                    <p class="font-sans text-[10px] tracking-[0.5em] text-blood-500">PAKISTAN • GLOBAL DOMINATION</p>
-                </div>
-                <button onclick="waGeneral()" class="btn-aggressive border-[#25D366] text-[#25D366] hover:bg-[#25D366] hover:text-black">+92 349 7814918</button>
-            </div>
-        </footer>
-    </div>
-
-    <div id="manager-chatbot" class="fixed bottom-0 right-0 md:bottom-8 md:right-8 w-full md:w-[400px] h-[600px] z-[9999] flex flex-col glass-panel">
-        <div class="bg-black border-b border-blood-700 p-5 flex justify-between items-center">
-            <div class="flex items-center gap-4">
-                <div class="w-10 h-10 bg-blood-900 border border-blood-500 flex items-center justify-center font-luxury text-white">MGR</div>
-                <h4 class="font-luxury text-white text-lg">THE MANAGER</h4>
-            </div>
-            <button onclick="toggleChat()" class="text-gray-500 hover:text-white text-3xl">&times;</button>
-        </div>
-        <div id="chat-stream" class="flex-1 p-6 overflow-y-auto flex flex-col gap-6 font-sans text-sm bg-carbon-fiber"></div>
-        <div class="p-5 bg-black border-t border-blood-900">
-            <button onclick="waGeneral()" class="w-full btn-aggressive border-[#25D366] text-[#25D366] py-4 text-[11px]">MESSAGE DIRECTLY</button>
-        </div>
     </div>
 
     <script>
         const WA_NUMBER = "923497814918";
         const bgm = document.getElementById('bgm-audio');
-        const sfxHover = document.getElementById('sfx-hover');
-        bgm.volume = 0.4;
-        
-        function playHoverSound() { sfxHover.currentTime = 0; sfxHover.play().catch(()=>{}); }
-        function formatPKR(num) { return "PKR " + num.toLocaleString('en-PK'); }
 
-        // --- UPDATED PRODUCTS WITH REAL 2026 PRICES ---
+        // --- UPDATED PRODUCTS (Removed public/) ---
         const products = [
-            { id: 'AW1', name: 'Commercial Treadmill', cat: 'Cardio', price: 350000, img: '/public/images/Revo-rt114-ac.jpg', vid: '/public/videos/No Matter Where You Start - NordicTrack Commercial 2950 Treadmill Powered by iFit(720P_HD).mp4' },
-            { id: 'AW2', name: 'Creatine Monohydrate (300g)', cat: 'Supplement', price: 7000, img: '/public/images/wellcore---pure-micronised-creatine-monohydrate-fruit-fusion-enhanced-.webp', vid: '/public/videos/Pure Creatine Monohydrate By Wellcore _ The Ultimate Muscle Fuel(720P_HD).mp4' },
-            { id: 'AW3', name: 'Rubber Hex Dumbbells (12.5kg)', cat: 'Dumbbells', price: 7500, img: '/public/images/1-PC-APOLLO-PRO-STYLE-RUBBER-DUMBBELL-2-1.jpg', vid: '/public/videos/VID_20260213175502.mp4' },
-            { id: 'AW4', name: 'Whey Protein (1kg)', cat: 'Supplement', price: 11000, img: 'https://images.unsplash.com/photo-1593095948071-474c5cc2989d?w=800&q=80', vid: '/public/videos/Whey protein AD _ Vlad rum video(720P_HD).mp4' },
-            { id: 'AW5', name: 'Squat Rack (Heavy Duty)', cat: 'Strength', price: 90000, img: '/public/images/Screenshot_2026-03-12-13-51-19-15_99c04817c0de5652397fc8b56c3b3817.jpg', vid: '/public/videos/RITFIT GAZELLE 3-in-1 Leg Press Hack Squat Machine for Home Gym(720P_HD).mp4' },
-            { id: 'AW6', name: 'Rubber Hex Dumbbells (20kg)', cat: 'Dumbbells', price: 12000, img: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=800&q=80', vid: '/public/videos/Barbell Innovation since 2008 _ Full Commercial  _  8K(720P_HD).mp4' },
-            { id: 'AW7', name: 'Air Bike (Crossfit)', cat: 'Cardio', price: 90000, img: 'https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?w=800&q=80', vid: '/public/videos/RB Gripper ad 2(480P).mp4' },
-            { id: 'AW8', name: 'Pre-Workout (300g)', cat: 'Supplement', price: 9000, img: 'https://images.unsplash.com/photo-1550345332-09e3ac987658?w=800&q=80', vid: '/public/videos/Cinematic C4 Pre Workout Commercial(720P_HD).mp4' }
+            { id: 'AW1', name: 'Commercial Treadmill', cat: 'Cardio', price: 350000, img: 'images/Revo-rt114-ac.jpg', vid: 'videos/No Matter Where You Start - NordicTrack Commercial 2950 Treadmill Powered by iFit(720P_HD).mp4' },
+            { id: 'AW2', name: 'Creatine Monohydrate (300g)', cat: 'Supplement', price: 7000, img: 'images/wellcore---pure-micronised-creatine-monohydrate-fruit-fusion-enhanced-.webp', vid: 'videos/Pure Creatine Monohydrate By Wellcore _ The Ultimate Muscle Fuel(720P_HD).mp4' },
+            { id: 'AW3', name: 'Rubber Hex Dumbbells (12.5kg)', cat: 'Dumbbells', price: 7500, img: 'images/1-PC-APOLLO-PRO-STYLE-RUBBER-DUMBBELL-2-1.jpg', vid: 'videos/VID_20260213175502.mp4' },
+            { id: 'AW4', name: 'Whey Protein (1kg)', cat: 'Supplement', price: 11000, img: 'https://images.unsplash.com/photo-1593095948071-474c5cc2989d?w=800&q=80', vid: 'videos/Whey protein AD _ Vlad rum video(720P_HD).mp4' },
+            { id: 'AW5', name: 'Squat Rack (Heavy Duty)', cat: 'Strength', price: 90000, img: 'images/Screenshot_2026-03-12-13-51-19-15_99c04817c0de5652397fc8b56c3b3817.jpg', vid: 'videos/RITFIT GAZELLE 3-in-1 Leg Press Hack Squat Machine for Home Gym(720P_HD).mp4' },
+            { id: 'AW6', name: 'Rubber Hex Dumbbells (20kg)', cat: 'Dumbbells', price: 12000, img: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=800&q=80', vid: 'videos/Barbell Innovation since 2008 _ Full Commercial  _  8K(720P_HD).mp4' }
         ];
 
-        // GATE LOGIC
         document.getElementById('btn-breach').addEventListener('click', () => {
-            playHoverSound();
-            document.getElementById('btn-breach').style.display = 'none';
             document.getElementById('scan-progress').classList.remove('hidden');
-            document.getElementById('gate-msg').classList.remove('hidden');
-            gsap.to("#scan-bar", { width: "100%", duration: 2, ease: "power2.inOut", onComplete: unlockProtocol });
+            gsap.to("#scan-bar", { width: "100%", duration: 1.5, onComplete: () => {
+                bgm.play();
+                document.getElementById('ambient-video-layer').play();
+                gsap.to("#the-gate", { opacity: 0, display: "none" });
+                gsap.to("#main-app", { display: "block", opacity: 1, onComplete: renderVault });
+            }});
         });
-
-        function unlockProtocol() {
-            bgm.play().then(() => document.getElementById('audio-visualizer').style.opacity = '1').catch(()=>{});
-            document.getElementById('ambient-video-layer').play().catch(()=>{});
-            setTimeout(() => {
-                const tl = gsap.timeline();
-                tl.to("#the-gate", { opacity: 0, scale: 1.1, duration: 1, display: "none" })
-                  .set("#main-app", { display: "block", opacity: 1 })
-                  .from(".gs-reveal", { y: 40, opacity: 0, stagger: 0.1, duration: 1 })
-                  .add(renderVault);
-            }, 500);
-        }
 
         function renderVault() {
             const grid = document.getElementById('product-grid');
             products.forEach(prod => {
                 const card = document.createElement('div');
-                card.className = "product-tile flex flex-col gs-product";
+                card.className = "product-tile flex flex-col";
                 card.innerHTML = `
-                    <div class="product-media" onmouseenter="playVid(this)" onmouseleave="pauseVid(this)">
-                        <img src="${prod.img}" alt="${prod.name}" loading="lazy">
-                        <video src="${prod.vid}" loop muted playsinline preload="none"></video>
+                    <div class="product-media" onmouseenter="this.querySelector('video').play()" onmouseleave="this.querySelector('video').pause()">
+                        <img src="${prod.img}" alt="${prod.name}">
+                        <video src="${prod.vid}" loop muted playsinline></video>
                     </div>
-                    <div class="p-6 flex-1 flex flex-col justify-between">
-                        <div>
-                            <h4 class="font-luxury text-xl text-white mb-1 uppercase">${prod.name}</h4>
-                            <p class="font-sans text-[8px] text-blood-500 tracking-widest uppercase mb-4">${prod.cat}</p>
-                        </div>
-                        <div>
-                            <div class="font-ticker text-4xl text-white mb-6" id="price-${prod.id}">${formatPKR(prod.price)}</div>
-                            <button onclick="negotiateDeal('${prod.name}', '${prod.id}')" class="w-full btn-aggressive py-4">NEGOTIATE</button>
-                        </div>
+                    <div class="p-6">
+                        <h4 class="font-luxury text-xl text-white uppercase">${prod.name}</h4>
+                        <div class="font-ticker text-3xl text-blood-500 my-4">PKR ${prod.price.toLocaleString()}</div>
+                        <button onclick="negotiate('${prod.name}', ${prod.price})" class="w-full btn-aggressive">NEGOTIATE</button>
                     </div>
                 `;
                 grid.appendChild(card);
             });
-            ScrollTrigger.batch(".gs-product", { onEnter: b => gsap.to(b, { opacity: 1, y: 0, stagger: 0.1 }) });
         }
 
-        function playVid(el) { const v = el.querySelector('video'); if(v) v.play().catch(()=>{}); }
-        function pauseVid(el) { const v = el.querySelector('video'); if(v) v.pause(); }
-
-        function negotiateDeal(name, id) {
-            const price = document.getElementById(`price-${id}`).innerText;
-            const msg = `AW Manager, I'm securing the [${name}] at ${price}. Let's discuss delivery.`;
+        function negotiate(name, price) {
+            const msg = `AW Manager, I'm interested in ${name} for PKR ${price.toLocaleString()}.`;
             window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
         }
-
-        function waGeneral() {
-            window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent("AW Gym Enterprises. I need a consultation for my iron sanctuary.")}`, '_blank');
-        }
-
-        function toggleChat() { 
-            playHoverSound(); 
-            document.getElementById('manager-chatbot').classList.toggle('active'); 
-        }
-
-        setInterval(() => {
-            document.getElementById('sys-time').innerText = new Date().toTimeString().split(' ')[0] + "." + Math.floor(Math.random()*99);
-        }, 100);
     </script>
 </body>
 </html>
-
