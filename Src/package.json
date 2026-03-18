@@ -1,7 +1,7 @@
 {
   "name": "aw-gyms-server",
   "version": "1.0.0",
-  "description": "AW GYMS — Elite Gym Store Backend",
+  "description": "AW GYMS Backend with Tyler AI",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -9,7 +9,8 @@
   },
   "dependencies": {
     "express": "^4.18.2",
-    "cors": "^2.8.5"
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1"
   },
   "engines": {
     "node": ">=16.0.0"
