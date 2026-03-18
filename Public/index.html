@@ -1,0 +1,2579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<meta name="theme-color" content="#000000"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<title>AW GYMS — Elite Performance Store</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Rajdhani:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet"/>
+
+<style>
+/* ══════════════════════════════════════════════
+   AW GYMS — MASTER STYLESHEET
+   Theme: Multi-dimensional — Gold/Cyber/Apple/Military
+   ══════════════════════════════════════════════ */
+
+:root {
+  --gold: #C9A84C;
+  --gold-l: #F0D080;
+  --gold-d: #8B6914;
+  --neon: #00FFB3;
+  --neon2: #FF006E;
+  --neon3: #7B2FFF;
+  --cyber: #0DFFE0;
+  --white: #F5F2EE;
+  --black: #030303;
+  --dark: #080808;
+  --dark2: #0F0F0F;
+  --dark3: #181818;
+  --dark4: #222222;
+  --green: #25D366;
+  --red: #FF3B30;
+  --military: #4A5240;
+  --military2: #2D3B1E;
+  --text-dim: rgba(245,242,238,0.45);
+  --border: rgba(201,168,76,0.2);
+  --glow-gold: 0 0 30px rgba(201,168,76,0.4);
+  --glow-neon: 0 0 30px rgba(0,255,179,0.4);
+  --transition: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--black);
+  color: var(--white);
+  font-family: 'Rajdhani', sans-serif;
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* ── CUSTOM CURSOR ─────────────────────────── */
+#cursor {
+  position: fixed;
+  width: 12px; height: 12px;
+  background: var(--gold);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: width 0.2s, height 0.2s, background 0.2s;
+  mix-blend-mode: difference;
+}
+#cursor-ring {
+  position: fixed;
+  width: 36px; height: 36px;
+  border: 1px solid rgba(201,168,76,0.5);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%, -50%);
+  transition: all 0.12s ease;
+}
+#cursor.click { width: 20px; height: 20px; background: var(--neon); }
+
+/* ── NOISE OVERLAY ─────────────────────────── */
+#noise {
+  position: fixed; inset: 0; z-index: 9997; pointer-events: none;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+}
+
+/* ── GLOBAL CANVAS (particles) ─────────────── */
+#particle-canvas {
+  position: fixed; inset: 0;
+  pointer-events: none; z-index: 1;
+}
+
+/* ── SPOTLIGHT ──────────────────────────────── */
+#spotlight {
+  position: fixed; inset: 0;
+  pointer-events: none; z-index: 2;
+  background: radial-gradient(circle 200px at var(--mx,50%) var(--my,50%), rgba(201,168,76,0.06) 0%, transparent 70%);
+  transition: background 0.1s;
+}
+
+/* ══════════════════════════════════════════════
+   INTRO / SPLASH
+   ══════════════════════════════════════════════ */
+#splash {
+  position: fixed; inset: 0; z-index: 1000;
+  background: var(--black);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  overflow: hidden;
+}
+#splash.out {
+  animation: splashOut 1.2s var(--transition) forwards;
+}
+@keyframes splashOut {
+  0%   { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.05); pointer-events: none; }
+}
+
+.splash-video-bg {
+  position: absolute; inset: 0;
+  object-fit: cover; width: 100%; height: 100%;
+  opacity: 0.25; filter: saturate(0) contrast(1.2);
+}
+.splash-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(3,3,3,0.7) 0%, rgba(3,3,3,0.4) 50%, rgba(3,3,3,0.95) 100%);
+}
+
+.splash-content {
+  position: relative; z-index: 2;
+  text-align: center;
+  animation: splashContentIn 1.5s var(--transition) forwards;
+}
+@keyframes splashContentIn {
+  from { opacity: 0; transform: translateY(40px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.splash-eyebrow {
+  font-family: 'Space Mono', monospace;
+  font-size: clamp(0.5rem, 2vw, 0.7rem);
+  letter-spacing: 0.6em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+  opacity: 0.8;
+}
+
+.splash-logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(5rem, 25vw, 14rem);
+  line-height: 0.85;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, var(--gold-l) 0%, var(--gold) 40%, var(--gold-d) 70%, var(--neon) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 60px rgba(201,168,76,0.3));
+}
+
+.splash-sub {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(0.9rem, 3vw, 1.3rem);
+  font-weight: 300;
+  letter-spacing: 0.5em;
+  color: rgba(245,242,238,0.6);
+  margin-top: 1rem;
+  text-transform: uppercase;
+}
+
+.splash-divider {
+  width: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), var(--neon), transparent);
+  margin: 2.5rem auto;
+  animation: dividerExpand 1.5s 0.5s var(--transition) forwards;
+}
+@keyframes dividerExpand { to { width: 200px; } }
+
+.splash-enter {
+  position: relative;
+  background: transparent;
+  border: 1px solid var(--gold);
+  color: var(--gold);
+  font-family: 'Orbitron', monospace;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.4em;
+  padding: 1.1rem 3.5rem;
+  cursor: pointer;
+  text-transform: uppercase;
+  overflow: hidden;
+  transition: color 0.4s ease;
+}
+.splash-enter::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, var(--gold), var(--neon));
+  transform: translateX(-101%);
+  transition: transform 0.4s var(--transition);
+  z-index: -1;
+}
+.splash-enter:hover::before, .splash-enter:active::before { transform: translateX(0); }
+.splash-enter:hover, .splash-enter:active { color: var(--black); border-color: transparent; }
+
+.splash-stats {
+  position: absolute; bottom: 2rem; left: 0; right: 0;
+  display: flex; justify-content: center; gap: clamp(2rem, 8vw, 5rem);
+}
+.splash-stat-num {
+  font-family: 'Orbitron', monospace;
+  font-size: clamp(1.2rem, 4vw, 1.8rem);
+  font-weight: 900;
+  color: var(--gold);
+}
+.splash-stat-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.5rem;
+  letter-spacing: 0.3em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+
+/* ══════════════════════════════════════════════
+   MAIN SITE
+   ══════════════════════════════════════════════ */
+#site { display: none; }
+#site.active { display: block; }
+
+/* ── NAV ────────────────────────────────────── */
+#nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 800;
+  padding: 1.2rem 2rem;
+  display: flex; align-items: center; justify-content: space-between;
+  background: linear-gradient(180deg, rgba(3,3,3,0.95) 0%, transparent 100%);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(201,168,76,0.1);
+  transition: all 0.3s ease;
+}
+
+.nav-logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.8rem;
+  letter-spacing: 0.1em;
+  background: linear-gradient(135deg, var(--gold-l), var(--gold), var(--neon));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+  cursor: pointer;
+}
+
+.nav-links {
+  display: flex; gap: 2rem; align-items: center;
+  list-style: none;
+}
+.nav-links a {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.3em;
+  color: var(--text-dim);
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: color 0.3s ease;
+  cursor: pointer;
+}
+.nav-links a:hover { color: var(--gold); }
+
+.nav-actions {
+  display: flex; gap: 1rem; align-items: center;
+}
+
+.nav-btn {
+  background: transparent;
+  border: 1px solid rgba(201,168,76,0.3);
+  color: var(--gold);
+  padding: 0.5rem 1.2rem;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+}
+.nav-btn:hover { background: rgba(201,168,76,0.1); border-color: var(--gold); }
+.nav-btn.primary { background: var(--gold); color: var(--black); border-color: var(--gold); }
+.nav-btn.primary:hover { background: var(--gold-l); }
+
+.cart-count {
+  position: absolute; top: -6px; right: -6px;
+  width: 16px; height: 16px;
+  background: var(--neon2);
+  color: white;
+  border-radius: 50%;
+  font-size: 0.5rem;
+  font-family: 'Space Mono', monospace;
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* ── HERO ────────────────────────────────────── */
+#hero {
+  position: relative;
+  height: 100vh; min-height: 600px;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+
+#hero-video {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  filter: saturate(0.6) contrast(1.1);
+}
+
+.hero-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(3,3,3,0.85) 0%,
+    rgba(3,3,3,0.5) 40%,
+    rgba(3,3,3,0.7) 100%
+  );
+}
+
+/* Cyber grid */
+.cyber-grid {
+  position: absolute; inset: 0; pointer-events: none;
+  background-image:
+    linear-gradient(rgba(0,255,179,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,255,179,0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+  animation: gridScroll 20s linear infinite;
+}
+@keyframes gridScroll {
+  from { background-position: 0 0; }
+  to   { background-position: 60px 60px; }
+}
+
+.hero-content {
+  position: relative; z-index: 3;
+  text-align: center;
+  padding: 0 1.5rem;
+  max-width: 900px;
+}
+
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  border: 1px solid rgba(0,255,179,0.4);
+  padding: 0.4rem 1rem;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.55rem;
+  letter-spacing: 0.4em;
+  color: var(--neon);
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+  animation: badgePulse 3s ease infinite;
+}
+@keyframes badgePulse {
+  0%, 100% { border-color: rgba(0,255,179,0.4); box-shadow: 0 0 0 0 rgba(0,255,179,0); }
+  50% { border-color: rgba(0,255,179,0.8); box-shadow: 0 0 20px rgba(0,255,179,0.15); }
+}
+.badge-dot { width: 6px; height: 6px; background: var(--neon); border-radius: 50%; animation: pulse 2s ease infinite; }
+
+.hero-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(3.5rem, 14vw, 9rem);
+  line-height: 0.88;
+  letter-spacing: -0.01em;
+  margin-bottom: 1.5rem;
+}
+.hero-title .line1 {
+  display: block;
+  background: linear-gradient(135deg, #fff 0%, var(--gold-l) 50%, var(--gold) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.hero-title .line2 {
+  display: block;
+  background: linear-gradient(135deg, var(--neon) 0%, var(--cyber) 50%, var(--gold) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  text-shadow: none; filter: drop-shadow(0 0 30px rgba(0,255,179,0.3));
+}
+
+.hero-desc {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1rem, 3vw, 1.3rem);
+  font-weight: 300;
+  color: rgba(245,242,238,0.65);
+  letter-spacing: 0.1em;
+  margin-bottom: 2.5rem;
+  line-height: 1.6;
+}
+
+.hero-actions {
+  display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
+}
+
+.btn-hero-primary {
+  background: linear-gradient(135deg, var(--gold), var(--neon));
+  color: var(--black);
+  border: none;
+  padding: 1rem 2.5rem;
+  font-family: 'Orbitron', monospace;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+}
+.btn-hero-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(201,168,76,0.3); }
+
+.btn-hero-secondary {
+  background: transparent;
+  color: var(--white);
+  border: 1px solid rgba(245,242,238,0.3);
+  padding: 1rem 2.5rem;
+  font-family: 'Orbitron', monospace;
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+}
+.btn-hero-secondary:hover { border-color: var(--gold); color: var(--gold); }
+
+.hero-scroll {
+  position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
+  font-family: 'Space Mono', monospace;
+  font-size: 0.5rem;
+  letter-spacing: 0.4em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  animation: scrollBounce 2s ease infinite;
+  cursor: pointer;
+}
+@keyframes scrollBounce { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(6px)} }
+.scroll-arrow { font-size: 0.8rem; }
+
+/* ── STATS BAR ──────────────────────────────── */
+#stats-bar {
+  background: var(--dark2);
+  border-top: 1px solid rgba(201,168,76,0.1);
+  border-bottom: 1px solid rgba(201,168,76,0.1);
+  padding: 2rem;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  text-align: center;
+  gap: 1px;
+  background: linear-gradient(135deg, var(--dark2), var(--dark3));
+  position: relative; overflow: hidden;
+}
+#stats-bar::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(201,168,76,0.03), transparent);
+  animation: statsSweep 4s linear infinite;
+}
+@keyframes statsSweep { from{transform:translateX(-100%)} to{transform:translateX(100%)} }
+
+.stat-item { padding: 0.5rem; border-right: 1px solid rgba(201,168,76,0.08); }
+.stat-item:last-child { border-right: none; }
+.stat-num {
+  font-family: 'Orbitron', monospace;
+  font-size: clamp(1.5rem, 5vw, 2.5rem);
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--gold), var(--neon));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.stat-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.5rem;
+  letter-spacing: 0.3em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+
+/* ── SECTION HEADERS ────────────────────────── */
+.section-header {
+  text-align: center;
+  padding: 5rem 2rem 3rem;
+}
+.section-eyebrow {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.6em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+.section-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(2.5rem, 8vw, 5rem);
+  line-height: 0.9;
+  background: linear-gradient(135deg, var(--white), var(--gold));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  letter-spacing: 0.02em;
+}
+.section-sub {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.1rem;
+  color: var(--text-dim);
+  margin-top: 1rem;
+  font-weight: 300;
+}
+
+/* ── FILTER TABS ────────────────────────────── */
+.filter-tabs {
+  display: flex; justify-content: center; gap: 0.5rem;
+  padding: 0 1.5rem 2rem;
+  flex-wrap: wrap;
+}
+.filter-tab {
+  background: transparent;
+  border: 1px solid rgba(201,168,76,0.2);
+  color: var(--text-dim);
+  padding: 0.6rem 1.5rem;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.filter-tab.active, .filter-tab:hover {
+  background: rgba(201,168,76,0.1);
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+/* ── PRODUCTS GRID ──────────────────────────── */
+#products-section {
+  padding: 0 1.5rem 5rem;
+}
+
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+  gap: 1.5rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* ── PRODUCT CARD 3D ────────────────────────── */
+.product-card {
+  position: relative;
+  background: var(--dark2);
+  border: 1px solid rgba(201,168,76,0.12);
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.4s var(--transition);
+  transform-style: preserve-3d;
+  animation: cardIn 0.5s var(--transition) both;
+}
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.product-card:hover {
+  border-color: rgba(201,168,76,0.5);
+  transform: translateY(-6px) rotateX(2deg);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 30px rgba(201,168,76,0.1);
+}
+
+.card-img-wrap {
+  position: relative;
+  height: 200px;
+  background: var(--dark3);
+  overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+}
+.card-img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease, filter 0.4s ease;
+  filter: saturate(0.8);
+}
+.product-card:hover .card-img { transform: scale(1.05); filter: saturate(1); }
+
+.card-img-placeholder {
+  font-size: 4rem;
+  opacity: 0.4;
+  transition: all 0.3s ease;
+}
+.product-card:hover .card-img-placeholder { opacity: 0.7; transform: scale(1.1); }
+
+.card-badge {
+  position: absolute; top: 1rem; left: 1rem;
+  background: linear-gradient(135deg, var(--gold), var(--neon));
+  color: var(--black);
+  font-family: 'Space Mono', monospace;
+  font-size: 0.5rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  padding: 4px 10px;
+  text-transform: uppercase;
+  clip-path: polygon(4px 0%, 100% 0%, calc(100% - 4px) 100%, 0% 100%);
+}
+
+.card-category-tag {
+  position: absolute; top: 1rem; right: 1rem;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.45rem;
+  letter-spacing: 0.2em;
+  color: rgba(201,168,76,0.7);
+  text-transform: uppercase;
+  background: rgba(0,0,0,0.6);
+  padding: 3px 8px;
+  border: 1px solid rgba(201,168,76,0.2);
+}
+
+/* Scan line on hover */
+.card-scan {
+  position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(180deg, transparent 45%, rgba(0,255,179,0.06) 50%, transparent 55%);
+  transform: translateY(-100%);
+  transition: none;
+}
+.product-card:hover .card-scan {
+  animation: cardScan 1s ease forwards;
+}
+@keyframes cardScan { from{transform:translateY(-100%)} to{transform:translateY(100%)} }
+
+.card-body {
+  padding: 1.4rem;
+}
+.card-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.25rem;
+  font-weight: 400;
+  color: var(--white);
+  margin-bottom: 0.4rem;
+  line-height: 1.2;
+  letter-spacing: 0.02em;
+}
+.card-desc {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  line-height: 1.55;
+  margin-bottom: 1.2rem;
+  font-weight: 300;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.card-meta {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 1.2rem;
+}
+.card-price {
+  font-family: 'Orbitron', monospace;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--gold);
+}
+.card-rating {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.55rem;
+  color: rgba(201,168,76,0.7);
+  letter-spacing: 0.05em;
+}
+.card-actions {
+  display: grid; grid-template-columns: 1fr auto;
+  gap: 0.6rem;
+}
+.btn-card-buy {
+  background: linear-gradient(135deg, rgba(201,168,76,0.15), rgba(201,168,76,0.05));
+  border: 1px solid rgba(201,168,76,0.4);
+  color: var(--gold);
+  padding: 0.7rem;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.btn-card-buy:hover { background: var(--gold); color: var(--black); }
+.btn-card-wa {
+  background: var(--green);
+  border: none; color: white;
+  width: 38px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex; align-items: center; justify-content: center;
+}
+.btn-card-wa:hover { background: #1ea952; transform: scale(1.05); }
+
+/* Glow corner */
+.card-glow {
+  position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(circle at 0% 0%, rgba(201,168,76,0.08) 0%, transparent 60%);
+  opacity: 0; transition: opacity 0.4s ease;
+}
+.product-card:hover .card-glow { opacity: 1; }
+
+/* ── AR SECTION ─────────────────────────────── */
+#ar-section {
+  position: relative;
+  background: var(--dark);
+  padding: 5rem 0 0;
+  overflow: hidden;
+}
+
+.ar-bg-grid {
+  position: absolute; inset: 0; pointer-events: none;
+  background-image:
+    linear-gradient(rgba(0,255,179,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,255,179,0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+#ar-viewport {
+  position: relative;
+  height: 75vh; max-height: 700px;
+  margin: 0 1.5rem 5rem;
+  border: 1px solid rgba(201,168,76,0.2);
+  overflow: hidden;
+}
+
+#ar-camera { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+#ar-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+.ar-hud-top {
+  position: absolute; top: 0; left: 0; right: 0;
+  padding: 1.2rem 1.5rem;
+  display: flex; justify-content: space-between; align-items: center;
+  background: linear-gradient(180deg, rgba(0,0,0,0.7) 0%, transparent 100%);
+  z-index: 10;
+}
+.ar-brand {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.3rem;
+  letter-spacing: 0.2em;
+  color: var(--gold);
+}
+.ar-status {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.55rem;
+  letter-spacing: 0.2em;
+  color: var(--neon);
+  text-transform: uppercase;
+  display: flex; align-items: center; gap: 6px;
+}
+.ar-status-dot { width: 6px; height: 6px; background: var(--neon); border-radius: 50%; animation: pulse 2s infinite; }
+
+.ar-crosshair {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60px; height: 60px;
+  pointer-events: none; z-index: 10;
+}
+.ar-crosshair::before, .ar-crosshair::after {
+  content: '';
+  position: absolute;
+  background: rgba(0,255,179,0.6);
+}
+.ar-crosshair::before { top: 50%; left: 0; right: 0; height: 1px; transform: translateY(-50%); }
+.ar-crosshair::after  { left: 50%; top: 0; bottom: 0; width: 1px; transform: translateX(-50%); }
+
+.ar-corners { position: absolute; inset: 15px; pointer-events: none; z-index: 10; }
+.ar-corner { position: absolute; width: 20px; height: 20px; }
+.ar-corner-tl { top: 0; left: 0; border-top: 2px solid var(--gold); border-left: 2px solid var(--gold); }
+.ar-corner-tr { top: 0; right: 0; border-top: 2px solid var(--gold); border-right: 2px solid var(--gold); }
+.ar-corner-bl { bottom: 0; left: 0; border-bottom: 2px solid var(--gold); border-left: 2px solid var(--gold); }
+.ar-corner-br { bottom: 0; right: 0; border-bottom: 2px solid var(--gold); border-right: 2px solid var(--gold); }
+
+.ar-scan-line {
+  position: absolute; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(0,255,179,0.5), transparent);
+  z-index: 11; pointer-events: none;
+  animation: arScanMove 3s linear infinite;
+}
+@keyframes arScanMove { from{top:0%} to{top:100%} }
+
+.ar-tap-hint {
+  position: absolute; bottom: 25%; left: 50%; transform: translateX(-50%);
+  font-family: 'Space Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.3em;
+  color: rgba(0,255,179,0.7);
+  text-transform: uppercase;
+  text-align: center;
+  animation: hintPulse 2s ease infinite;
+  z-index: 10;
+  pointer-events: none;
+}
+@keyframes hintPulse { 0%,100%{opacity:0.7} 50%{opacity:0.2} }
+
+.ar-controls {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  padding: 1.5rem;
+  display: flex; justify-content: space-around;
+  background: linear-gradient(0deg, rgba(0,0,0,0.8) 0%, transparent 100%);
+  z-index: 10;
+}
+.ar-ctrl-btn {
+  display: flex; flex-direction: column; align-items: center; gap: 5px;
+  cursor: pointer; background: transparent; border: none;
+}
+.ar-ctrl-icon {
+  width: 48px; height: 48px;
+  border: 1px solid rgba(201,168,76,0.3);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.3rem;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+.ar-ctrl-btn:active .ar-ctrl-icon { border-color: var(--gold); background: rgba(201,168,76,0.15); box-shadow: var(--glow-gold); }
+.ar-ctrl-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.45rem;
+  letter-spacing: 0.2em;
+  color: rgba(201,168,76,0.5);
+  text-transform: uppercase;
+}
+
+/* ── TYLER CHAT ─────────────────────────────── */
+#tyler-panel {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 900;
+  height: 88vh;
+  background: var(--dark);
+  border-top: 1px solid rgba(201,168,76,0.3);
+  transform: translateY(100%);
+  transition: transform 0.5s var(--transition);
+  display: flex; flex-direction: column;
+}
+#tyler-panel.open { transform: translateY(0); }
+
+.tyler-header {
+  padding: 1.2rem 1.5rem;
+  border-bottom: 1px solid rgba(201,168,76,0.1);
+  display: flex; align-items: center; gap: 1rem;
+  background: linear-gradient(135deg, var(--dark2), var(--dark3));
+  flex-shrink: 0;
+}
+.tyler-av {
+  width: 50px; height: 50px; border-radius: 50%;
+  border: 2px solid var(--gold);
+  background: linear-gradient(135deg, var(--dark3), var(--dark4));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.5rem; position: relative; flex-shrink: 0;
+}
+.tyler-av-live {
+  position: absolute; bottom: 1px; right: 1px;
+  width: 11px; height: 11px;
+  background: #4CAF50; border-radius: 50%;
+  border: 2px solid var(--dark2);
+  animation: pulse 2s ease infinite;
+}
+.tyler-info { flex: 1; }
+.tyler-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.2rem; letter-spacing: 0.15em; color: var(--gold);
+}
+.tyler-role {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.5rem; letter-spacing: 0.2em;
+  color: var(--text-dim); text-transform: uppercase;
+}
+.tyler-close-btn {
+  background: transparent; border: 1px solid rgba(201,168,76,0.2);
+  color: var(--gold); width: 34px; height: 34px;
+  font-size: 1.1rem; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.3s ease; flex-shrink: 0;
+}
+.tyler-close-btn:hover { background: rgba(201,168,76,0.1); border-color: var(--gold); }
+
+.chat-suggestions {
+  padding: 0.75rem 1.5rem 0;
+  display: flex; gap: 0.5rem; overflow-x: auto; flex-shrink: 0;
+}
+.chat-suggestions::-webkit-scrollbar { display: none; }
+.sugg-chip {
+  white-space: nowrap; flex-shrink: 0;
+  padding: 0.4rem 0.9rem;
+  border: 1px solid rgba(201,168,76,0.2);
+  color: rgba(201,168,76,0.7);
+  background: transparent;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.5rem; letter-spacing: 0.1em;
+  cursor: pointer; border-radius: 20px;
+  text-transform: uppercase; transition: all 0.2s ease;
+}
+.sugg-chip:active { background: rgba(201,168,76,0.1); border-color: var(--gold); }
+
+#chat-msgs {
+  flex: 1; overflow-y: auto; padding: 1.2rem 1.5rem;
+  display: flex; flex-direction: column; gap: 1rem;
+  scroll-behavior: smooth;
+}
+#chat-msgs::-webkit-scrollbar { width: 2px; }
+#chat-msgs::-webkit-scrollbar-thumb { background: rgba(201,168,76,0.2); }
+
+.msg { max-width: 85%; animation: msgIn 0.3s ease; }
+@keyframes msgIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+.msg-tyler { align-self: flex-start; }
+.msg-user  { align-self: flex-end; }
+
+.msg-bubble {
+  padding: 0.85rem 1.1rem;
+  font-size: 0.9rem; line-height: 1.6;
+}
+.msg-tyler .msg-bubble {
+  background: var(--dark3);
+  border: 1px solid rgba(201,168,76,0.12);
+  border-radius: 0 12px 12px 12px;
+  color: var(--white);
+}
+.msg-user .msg-bubble {
+  background: linear-gradient(135deg, rgba(201,168,76,0.15), rgba(0,255,179,0.08));
+  border: 1px solid rgba(201,168,76,0.25);
+  border-radius: 12px 0 12px 12px;
+  color: var(--white);
+}
+.msg-time {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.45rem; color: var(--text-dim);
+  margin-top: 4px; padding: 0 4px;
+  letter-spacing: 0.1em;
+}
+.msg-tyler .msg-time { text-align: left; }
+.msg-user  .msg-time { text-align: right; }
+
+.typing-ind {
+  display: flex; gap: 4px; align-items: center;
+  padding: 0.85rem 1rem;
+  background: var(--dark3);
+  border: 1px solid rgba(201,168,76,0.1);
+  border-radius: 0 12px 12px 12px;
+  width: fit-content;
+}
+.typing-dot {
+  width: 6px; height: 6px;
+  background: var(--gold); border-radius: 50%;
+  animation: typingB 1.2s ease infinite;
+}
+.typing-dot:nth-child(2){animation-delay:0.2s}
+.typing-dot:nth-child(3){animation-delay:0.4s}
+@keyframes typingB { 0%,100%{transform:translateY(0);opacity:0.4} 50%{transform:translateY(-5px);opacity:1} }
+
+.chat-input-row {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid rgba(201,168,76,0.1);
+  display: flex; gap: 0.6rem; align-items: center;
+  background: var(--dark2); flex-shrink: 0;
+}
+#chat-input {
+  flex: 1;
+  background: var(--dark3);
+  border: 1px solid rgba(201,168,76,0.15);
+  color: var(--white);
+  padding: 0.85rem 1rem;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+#chat-input:focus { border-color: rgba(201,168,76,0.45); }
+#chat-input::placeholder { color: rgba(245,242,238,0.25); font-size: 0.85rem; }
+
+.chat-action-btn {
+  width: 44px; height: 44px;
+  border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem; transition: all 0.2s ease; flex-shrink: 0;
+}
+#send-btn { background: linear-gradient(135deg, var(--gold), var(--neon)); color: var(--black); }
+#send-btn:active { transform: scale(0.92); }
+#voice-btn { background: var(--dark3); border: 1px solid rgba(201,168,76,0.2); color: var(--gold); }
+#voice-btn.active { border-color: var(--neon); color: var(--neon); animation: voicePulse 1s ease infinite; }
+@keyframes voicePulse { 0%,100%{box-shadow:0 0 0 0 rgba(0,255,179,0.3)} 50%{box-shadow:0 0 0 8px rgba(0,255,179,0)} }
+
+/* ── FLOATING BUTTONS ───────────────────────── */
+.float-group {
+  position: fixed; bottom: 1.5rem; right: 1.5rem;
+  z-index: 700;
+  display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-end;
+}
+
+.float-btn {
+  width: 54px; height: 54px;
+  border-radius: 50%;
+  border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.5rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  position: relative;
+}
+.float-btn:active { transform: scale(0.9); }
+
+.float-wa { background: var(--green); box-shadow: 0 4px 20px rgba(37,211,102,0.35); animation: floatWA 3s ease infinite; }
+@keyframes floatWA { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-5px)} }
+.float-tyler { background: linear-gradient(135deg, var(--dark3), var(--dark4)); border: 1px solid rgba(201,168,76,0.3); }
+.float-ar { background: linear-gradient(135deg, var(--neon3), var(--neon2)); }
+
+.float-badge {
+  position: absolute; top: -4px; right: -4px;
+  width: 18px; height: 18px;
+  background: var(--neon2); color: white;
+  border-radius: 50%; font-size: 0.5rem;
+  font-family: 'Space Mono', monospace;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700;
+}
+
+.float-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.5rem; letter-spacing: 0.15em;
+  color: var(--text-dim); text-transform: uppercase;
+  margin-right: 6px; opacity: 0;
+  transition: opacity 0.3s ease;
+  white-space: nowrap;
+}
+.float-group:hover .float-label { opacity: 1; }
+
+/* ── PRODUCT DETAIL DRAWER ──────────────────── */
+#detail-drawer {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 850;
+  background: var(--dark);
+  border-top: 1px solid rgba(201,168,76,0.3);
+  transform: translateY(100%);
+  transition: transform 0.5s var(--transition);
+  max-height: 90vh; overflow-y: auto;
+}
+#detail-drawer.open { transform: translateY(0); }
+
+.drawer-handle { width: 40px; height: 3px; background: rgba(201,168,76,0.25); border-radius: 2px; margin: 1.2rem auto; }
+
+.drawer-inner { padding: 0 1.5rem 2rem; }
+
+.drawer-category {
+  font-family: 'Space Mono', monospace; font-size: 0.55rem;
+  letter-spacing: 0.5em; color: var(--gold); text-transform: uppercase; margin-bottom: 0.4rem;
+}
+.drawer-name {
+  font-family: 'Cormorant Garamond', serif; font-size: 2.2rem;
+  font-weight: 300; color: var(--white); line-height: 1.1; margin-bottom: 0.75rem;
+}
+.drawer-stars {
+  font-family: 'Space Mono', monospace; font-size: 0.65rem;
+  color: var(--gold); margin-bottom: 1rem;
+}
+.drawer-desc {
+  font-size: 0.9rem; color: var(--text-dim); line-height: 1.7;
+  font-weight: 300; margin-bottom: 1.5rem;
+}
+.drawer-price {
+  font-family: 'Orbitron', monospace; font-size: 2rem;
+  font-weight: 700; color: var(--gold); margin-bottom: 1.5rem;
+}
+.drawer-btns { display: flex; gap: 0.75rem; }
+.btn-drawer-buy {
+  flex: 1; background: linear-gradient(135deg, var(--gold), var(--neon));
+  color: var(--black); border: none; padding: 1rem;
+  font-family: 'Orbitron', monospace; font-size: 0.7rem; font-weight: 700;
+  letter-spacing: 0.3em; text-transform: uppercase; cursor: pointer;
+  transition: all 0.3s ease; clip-path: polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%);
+}
+.btn-drawer-buy:active { transform: scale(0.98); }
+.btn-drawer-wa {
+  background: var(--green); border: none; color: white;
+  width: 54px; font-size: 1.4rem; cursor: pointer;
+  transition: all 0.3s ease; display: flex; align-items: center; justify-content: center;
+}
+.btn-drawer-wa:active { transform: scale(0.95); }
+.btn-drawer-close {
+  position: absolute; top: 1.2rem; right: 1.5rem;
+  background: transparent; border: 1px solid rgba(201,168,76,0.2);
+  color: var(--gold); width: 32px; height: 32px;
+  font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
+}
+
+/* ── FOOTER ─────────────────────────────────── */
+footer {
+  background: var(--dark2);
+  border-top: 1px solid rgba(201,168,76,0.1);
+  padding: 3rem 2rem;
+  text-align: center;
+}
+.footer-logo {
+  font-family: 'Bebas Neue', sans-serif; font-size: 3rem;
+  letter-spacing: 0.2em;
+  background: linear-gradient(135deg, var(--gold), var(--neon));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  margin-bottom: 0.75rem;
+}
+.footer-tagline {
+  font-family: 'Space Mono', monospace; font-size: 0.55rem;
+  letter-spacing: 0.5em; color: var(--text-dim); text-transform: uppercase; margin-bottom: 2rem;
+}
+.footer-contact {
+  font-family: 'Rajdhani', sans-serif; font-size: 1rem;
+  color: var(--text-dim); margin-bottom: 0.4rem;
+}
+.footer-contact a { color: var(--gold); text-decoration: none; }
+.footer-copy {
+  font-family: 'Space Mono', monospace; font-size: 0.5rem;
+  letter-spacing: 0.2em; color: rgba(245,242,238,0.2);
+  margin-top: 2rem; text-transform: uppercase;
+}
+
+/* ── TOAST ──────────────────────────────────── */
+.toast {
+  position: fixed; top: 5rem; left: 50%; transform: translateX(-50%);
+  z-index: 9000;
+  background: rgba(8,8,8,0.97);
+  border: 1px solid rgba(201,168,76,0.4);
+  color: var(--gold);
+  font-family: 'Space Mono', monospace; font-size: 0.6rem;
+  letter-spacing: 0.25em; padding: 0.75rem 1.5rem;
+  text-transform: uppercase; white-space: nowrap; pointer-events: none;
+  animation: toastIn 0.3s ease, toastOut 0.3s ease 2.7s forwards;
+  clip-path: polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%);
+}
+@keyframes toastIn  { from{opacity:0;transform:translateX(-50%) translateY(-8px)} to{opacity:1;transform:translateX(-50%) translateY(0)} }
+@keyframes toastOut { from{opacity:1} to{opacity:0} }
+
+/* ── LOADING ────────────────────────────────── */
+#loading-screen {
+  position: fixed; inset: 0; z-index: 2000;
+  background: var(--black);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 1.5rem;
+  display: none;
+}
+#loading-screen.on { display: flex; }
+.loading-ring {
+  width: 56px; height: 56px;
+  border: 2px solid rgba(201,168,76,0.15);
+  border-top-color: var(--gold);
+  border-right-color: var(--neon);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to{transform:rotate(360deg)} }
+.loading-text {
+  font-family: 'Space Mono', monospace; font-size: 0.6rem;
+  letter-spacing: 0.5em; color: var(--text-dim); text-transform: uppercase;
+}
+
+/* ── UTILS ──────────────────────────────────── */
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.7)} }
+
+@media (max-width: 640px) {
+  #stats-bar { grid-template-columns: repeat(2,1fr); }
+  .nav-links { display: none; }
+  .products-grid { grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+  .card-body { padding: 1rem; }
+  .card-name { font-size: 1rem; }
+}
+</style>
+</head>
+<body>
+
+<div id="noise"></div>
+<canvas id="particle-canvas"></canvas>
+<div id="spotlight"></div>
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<!-- ── LOADING ── -->
+<div id="loading-screen">
+  <div class="loading-ring"></div>
+  <div class="loading-text" id="loading-text">Initializing</div>
+</div>
+
+<!-- ══════════════════════ SPLASH ══════════════════════ -->
+<div id="splash">
+  <video class="splash-video-bg" src="/videos /video.mp4" autoplay muted loop playsinline></video>
+  <div class="splash-overlay"></div>
+  <div class="splash-content">
+    <div class="splash-eyebrow">Pakistan's Elite Gym Store</div>
+    <div class="splash-logo">AW<br>GYMS</div>
+    <div class="splash-sub">Forge Your Legacy</div>
+    <div class="splash-divider"></div>
+    <button class="splash-enter" onclick="enterSite()">Enter The Store</button>
+  </div>
+  <div class="splash-stats">
+    <div>
+      <div class="splash-stat-num" data-target="500">0</div>
+      <div class="splash-stat-label">Products</div>
+    </div>
+    <div>
+      <div class="splash-stat-num" data-target="12000">0</div>
+      <div class="splash-stat-label">Customers</div>
+    </div>
+    <div>
+      <div class="splash-stat-num" data-target="5">0</div>
+      <div class="splash-stat-label">Years Active</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════ SITE ══════════════════════ -->
+<div id="site">
+
+  <!-- NAV -->
+  <nav id="nav">
+    <div class="nav-logo" onclick="scrollTo(0,0)">AW GYMS</div>
+    <ul class="nav-links">
+      <li><a onclick="scrollToSection('products-section')">Equipment</a></li>
+      <li><a onclick="scrollToSection('supp-section')">Supplements</a></li>
+      <li><a onclick="scrollToSection('ar-section')">AR Store</a></li>
+      <li><a onclick="openTyler()">Tyler AI</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="nav-btn" onclick="openTyler()">💬 Tyler</button>
+      <button class="nav-btn primary" onclick="openWA()">WhatsApp</button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <video id="hero-video" src="/videos /video.mp4" autoplay muted loop playsinline></video>
+    <div class="hero-overlay"></div>
+    <div class="cyber-grid"></div>
+    <div class="hero-content">
+      <div class="hero-badge"><span class="badge-dot"></span>Now Open — Pakistan's #1 Gym Store</div>
+      <h1 class="hero-title">
+        <span class="line1">FORGE YOUR</span>
+        <span class="line2">LEGACY</span>
+      </h1>
+      <p class="hero-desc">Premium gym equipment & performance supplements.<br>Delivered nationwide across Pakistan.</p>
+      <div class="hero-actions">
+        <button class="btn-hero-primary" onclick="scrollToSection('products-section')">Shop Equipment</button>
+        <button class="btn-hero-secondary" onclick="openARSection()">View in AR →</button>
+      </div>
+    </div>
+    <div class="hero-scroll" onclick="scrollToSection('stats-bar')">
+      <span>Scroll</span><span class="scroll-arrow">↓</span>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section id="stats-bar">
+    <div class="stat-item"><div class="stat-num" data-target="500">0</div><div class="stat-label">Products</div></div>
+    <div class="stat-item"><div class="stat-num" data-target="12000">0</div><div class="stat-label">Happy Customers</div></div>
+    <div class="stat-item"><div class="stat-num" data-target="5">0</div><div class="stat-label">Years Active</div></div>
+    <div class="stat-item"><div class="stat-num" data-target="100">0</div><div class="stat-label">% Authentic</div></div>
+  </section>
+
+  <!-- PRODUCTS -->
+  <section id="products-section">
+    <div class="section-header">
+      <div class="section-eyebrow">Elite Performance</div>
+      <h2 class="section-title">GYM EQUIPMENT</h2>
+      <p class="section-sub">Commercial grade machinery for serious athletes</p>
+    </div>
+    <div class="filter-tabs">
+      <button class="filter-tab active" onclick="filterProducts('ALL', this)">All</button>
+      <button class="filter-tab" onclick="filterProducts('EQUIPMENT', this)">Equipment</button>
+      <button class="filter-tab" onclick="filterProducts('SUPPLEMENTS', this)">Supplements</button>
+    </div>
+    <div class="products-grid" id="products-grid"></div>
+  </section>
+
+  <!-- AR SECTION -->
+  <section id="ar-section">
+    <div class="ar-bg-grid"></div>
+    <div class="section-header">
+      <div class="section-eyebrow">Augmented Reality</div>
+      <h2 class="section-title">SEE IT IN<br>YOUR SPACE</h2>
+      <p class="section-sub">Place our gym in your room before you buy</p>
+    </div>
+    <div id="ar-viewport">
+      <video id="ar-camera" autoplay playsinline muted></video>
+      <canvas id="ar-canvas"></canvas>
+      <div class="ar-hud-top">
+        <div class="ar-brand">AW GYMS AR</div>
+        <div class="ar-status"><span class="ar-status-dot"></span>AR READY</div>
+      </div>
+      <div class="ar-crosshair"></div>
+      <div class="ar-corners">
+        <div class="ar-corner ar-corner-tl"></div>
+        <div class="ar-corner ar-corner-tr"></div>
+        <div class="ar-corner ar-corner-bl"></div>
+        <div class="ar-corner ar-corner-br"></div>
+      </div>
+      <div class="ar-scan-line"></div>
+      <div class="ar-tap-hint" id="ar-hint">⬇ TAP ANYWHERE TO PLACE GYM ⬇</div>
+      <div class="ar-controls">
+        <button class="ar-ctrl-btn" onclick="startAR()"><div class="ar-ctrl-icon">📷</div><div class="ar-ctrl-label">Start AR</div></button>
+        <button class="ar-ctrl-btn" onclick="resetAR()"><div class="ar-ctrl-icon">🔄</div><div class="ar-ctrl-label">Reset</div></button>
+        <button class="ar-ctrl-btn" onclick="openProducts()"><div class="ar-ctrl-icon">🏋️</div><div class="ar-ctrl-label">Products</div></button>
+        <button class="ar-ctrl-btn" onclick="openTyler()"><div class="ar-ctrl-icon">🤖</div><div class="ar-ctrl-label">Tyler AI</div></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">AW GYMS</div>
+    <div class="footer-tagline">Elite Performance Equipment · Pakistan</div>
+    <p class="footer-contact">📍 Pakistan &nbsp;|&nbsp; <a href="https://wa.me/923497814918">💬 WhatsApp: +92 349 7814918</a></p>
+    <p class="footer-copy">© 2025 AW GYMS — All Rights Reserved</p>
+  </footer>
+
+</div><!-- /site -->
+
+<!-- ── FLOATING BUTTONS ── -->
+<div class="float-group" id="float-group" style="display:none;">
+  <button class="float-btn float-ar" onclick="openARSection()" title="AR View">🕶️</button>
+  <button class="float-btn float-tyler" onclick="openTyler()" title="Tyler AI">💪<div class="float-badge">1</div></button>
+  <button class="float-btn float-wa" onclick="openWA()" title="WhatsApp">💬</button>
+</div>
+
+<!-- ── TYLER PANEL ── -->
+<div id="tyler-panel">
+  <div class="tyler-header">
+    <div class="tyler-av">💪<div class="tyler-av-live"></div></div>
+    <div class="tyler-info">
+      <div class="tyler-name">TYLER</div>
+      <div class="tyler-role">AI Fitness Trainer · AW GYMS</div>
+    </div>
+    <button class="tyler-close-btn" onclick="closeTyler()">✕</button>
+  </div>
+  <div class="chat-suggestions">
+    <button class="sugg-chip" onclick="askChip('Best equipment for home gym?')">Home Gym</button>
+    <button class="sugg-chip" onclick="askChip('What supplements should I take?')">Supplements</button>
+    <button class="sugg-chip" onclick="askChip('I want to build muscle. What do I need?')">Build Muscle</button>
+    <button class="sugg-chip" onclick="askChip('What is your most premium equipment?')">Premium Picks</button>
+    <button class="sugg-chip" onclick="askChip('How do I order and get delivery?')">Order & Delivery</button>
+    <button class="sugg-chip" onclick="askChip('Give me a 3-day workout plan')">Workout Plan</button>
+  </div>
+  <div id="chat-msgs"></div>
+  <div class="chat-input-row">
+    <input type="text" id="chat-input" placeholder="Ask Tyler anything about fitness or our products..." maxlength="400"
+      onkeydown="if(event.key==='Enter')sendMsg()"/>
+    <button class="chat-action-btn" id="voice-btn" onclick="toggleVoice()">🔊</button>
+    <button class="chat-action-btn" id="send-btn" onclick="sendMsg()">➤</button>
+  </div>
+</div>
+
+<!-- ── PRODUCT DETAIL DRAWER ── -->
+<div id="detail-drawer">
+  <button class="btn-drawer-close" onclick="closeDrawer()">✕</button>
+  <div class="drawer-handle"></div>
+  <div class="drawer-inner">
+    <div class="drawer-category" id="d-category"></div>
+    <div class="drawer-name" id="d-name"></div>
+    <div class="drawer-stars" id="d-stars"></div>
+    <div class="drawer-desc" id="d-desc"></div>
+    <div class="drawer-price" id="d-price"></div>
+    <div class="drawer-btns">
+      <button class="btn-drawer-buy" id="d-buy-btn">Buy Now</button>
+      <button class="btn-drawer-wa" onclick="openWAProduct()">💬</button>
+    </div>
+  </div>
+</div>
+
+<!-- THREE.JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+<script>
+// ═══════════════════════════════════════════════════
+//  AW GYMS — MASTER SCRIPT
+// ═══════════════════════════════════════════════════
+
+const API_BASE = 'http://localhost:6700';
+const WA = '923497814918';
+
+const PRODUCTS = [
+  { id:1,  category:'EQUIPMENT',    name:'Pro Dumbbell Set',      emoji:'🏋️', price:45000,  desc:'Commercial cast iron dumbbells 5–50kg. Chrome knurled handles. Precision balanced for elite performance.',          badge:'BESTSELLER', rating:4.9, reviews:312,  img:'images/dumbbell.jpg'  },
+  { id:2,  category:'EQUIPMENT',    name:'Elite Treadmill X9',    emoji:'🏃', price:185000, desc:'22km/h top speed, 15% incline, heart rate monitor, whisper-quiet motor. Built for champions.',                       badge:'NEW',        rating:4.8, reviews:189,  img:'images/treadmill.jpg' },
+  { id:3,  category:'EQUIPMENT',    name:'Power Bench Station',   emoji:'🪑', price:62000,  desc:'Olympic bench press with safety catches, adjustable 0–85°. 300kg rated. Compete. Dominate.',                        badge:null,         rating:4.7, reviews:254,  img:'images/bench.jpg'     },
+  { id:4,  category:'EQUIPMENT',    name:'Cable Crossover Pro',   emoji:'⚙️', price:95000,  desc:'Dual pulley system, 200kg weight stack. Full-body functional training station for serious athletes.',                badge:'HOT',        rating:4.9, reviews:178,  img:'images/cable.jpg'     },
+  { id:5,  category:'EQUIPMENT',    name:'Battle Ropes 15m',      emoji:'🌀', price:12500,  desc:'Heavy-duty manila battle ropes 15m × 38mm. Wall anchor sleeve included. Brutal conditioning.',                      badge:null,         rating:4.8, reviews:421,  img:'images/ropes.jpg'     },
+  { id:6,  category:'EQUIPMENT',    name:'Smith Machine Elite',   emoji:'🔩', price:220000, desc:'Commercial smith machine with full cable system. 360° swivel pulleys. 300kg rated.',                                 badge:'PREMIUM',    rating:5.0, reviews:96,   img:'images/smith.jpg'     },
+  { id:7,  category:'EQUIPMENT',    name:'Concept2 Rower',        emoji:'🚣', price:145000, desc:'Air resistance rowing ergometer with PM5 performance monitor. Foldable frame for easy storage.',                     badge:null,         rating:4.9, reviews:203,  img:'images/rowing.jpg'    },
+  { id:8,  category:'EQUIPMENT',    name:'Resistance Band Set',   emoji:'🔗', price:4500,   desc:'Premium latex bands 5–100lbs. 12-piece pro set with door anchor and handles. Train anywhere.',                       badge:'VALUE',      rating:5.0, reviews:887,  img:'images/bands.jpg'     },
+  { id:9,  category:'SUPPLEMENTS',  name:'Whey Protein Gold',     emoji:'🥛', price:8500,   desc:'100% whey protein isolate. 25g protein per scoop. 30 servings. Multiple flavors available.',                        badge:'BESTSELLER', rating:4.9, reviews:1204, img:'images/whey.jpg'      },
+  { id:10, category:'SUPPLEMENTS',  name:'Creatine Monohydrate',  emoji:'⚡', price:3200,   desc:'Micronized creatine monohydrate. 5g per serving. 60 servings. Pure unflavored — clinically proven.',                badge:null,         rating:4.8, reviews:934,  img:'images/creatine.jpg'  },
+  { id:11, category:'SUPPLEMENTS',  name:'Pre-Workout APEX',      emoji:'🔥', price:5500,   desc:'200mg caffeine, beta-alanine, citrulline malate. 30 servings. Explosive energy. No crash.',                         badge:'HOT',        rating:4.7, reviews:678,  img:'images/preworkout.jpg'},
+  { id:12, category:'SUPPLEMENTS',  name:'BCAA Recovery',         emoji:'💊', price:4800,   desc:'2:1:1 BCAA ratio. Electrolytes + Vitamin B6. 40 servings. Tropical flavor. Fast recovery.',                        badge:null,         rating:4.8, reviews:512,  img:'images/bcaa.jpg'      },
+  { id:13, category:'SUPPLEMENTS',  name:'Mass Gainer 5kg',       emoji:'💪', price:11000,  desc:'1250 calories per serving. 50g protein, 250g carbs. Chocolate & vanilla. Serious size.',                            badge:'NEW',        rating:4.6, reviews:389,  img:'images/mass.jpg'      },
+  { id:14, category:'SUPPLEMENTS',  name:'Omega-3 Fish Oil',      emoji:'🐟', price:2200,   desc:'Pharmaceutical grade omega-3. EPA 360mg + DHA 240mg per softgel. 90 softgels.',                                    badge:null,         rating:4.9, reviews:721,  img:'images/omega.jpg'     },
+];
+
+let chatHistory = [];
+let voiceOn = true;
+let currentProduct = null;
+let arStarted = false;
+let gymPlaced = false;
+let threeScene, threeCam, threeRenderer, gymGroup;
+
+// ─── CURSOR ────────────────────────────────────
+const cur = document.getElementById('cursor');
+const curRing = document.getElementById('cursor-ring');
+const spot = document.getElementById('spotlight');
+
+document.addEventListener('mousemove', e => {
+  cur.style.left = e.clientX + 'px';
+  cur.style.top = e.clientY + 'px';
+  setTimeout(() => {
+    curRing.style.left = e.clientX + 'px';
+    curRing.style.top = e.clientY + 'px';
+  }, 80);
+  spot.style.setProperty('--mx', e.clientX + 'px');
+  spot.style.setProperty('--my', e.clientY + 'px');
+});
+document.addEventListener('mousedown', () => cur.classList.add('click'));
+document.addEventListener('mouseup',   () => cur.classList.remove('click'));
+
+// ─── PARTICLES ─────────────────────────────────
+(function() {
+  const c = document.getElementById('particle-canvas');
+  const ctx = c.getContext('2d');
+  let W, H, pts;
+
+  function init() {
+    W = c.width = window.innerWidth;
+    H = c.height = window.innerHeight;
+    pts = Array.from({length: 80}, () => ({
+      x: Math.random() * W, y: Math.random() * H,
+      vx: (Math.random() - 0.5) * 0.4,
+      vy: -Math.random() * 0.6 - 0.1,
+      r: Math.random() * 1.5 + 0.3,
+      op: Math.random() * 0.4 + 0.05,
+      color: Math.random() > 0.6 ? '#00FFB3' : '#C9A84C'
+    }));
+  }
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    pts.forEach(p => {
+      ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = p.color.replace(')', `,${p.op})`).replace('rgb','rgba').replace('#00FFB3', `rgba(0,255,179,${p.op})`).replace('#C9A84C', `rgba(201,168,76,${p.op})`);
+      ctx.fill();
+      p.x += p.vx; p.y += p.vy;
+      if (p.y < -5) { p.y = H + 5; p.x = Math.random() * W; }
+    });
+    requestAnimationFrame(draw);
+  }
+  init(); draw();
+  window.addEventListener('resize', init);
+})();
+
+// ─── SPLASH COUNTER ANIMATION ──────────────────
+(function() {
+  document.querySelectorAll('[data-target]').forEach(el => {
+    const target = parseInt(el.dataset.target);
+    let current = 0;
+    const step = target / 60;
+    const timer = setInterval(() => {
+      current = Math.min(current + step, target);
+      el.textContent = Math.floor(current).toLocaleString() + (target >= 100 ? '+' : '');
+      if (current >= target) clearInterval(timer);
+    }, 30);
+  });
+})();
+
+// ─── ENTER SITE ────────────────────────────────
+function enterSite() {
+  document.getElementById('splash').classList.add('out');
+  setTimeout(() => {
+    document.getElementById('splash').style.display = 'none';
+    document.getElementById('site').classList.add('active');
+    document.getElementById('float-group').style.display = 'flex';
+    renderProducts('ALL');
+    animateStats();
+    initAudio();
+  }, 1000);
+}
+
+// ─── STATS COUNTER ─────────────────────────────
+function animateStats() {
+  document.querySelectorAll('#stats-bar .stat-num').forEach(el => {
+    const target = parseInt(el.dataset.target);
+    let current = 0;
+    const obs = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting) {
+        const step = target / 80;
+        const t = setInterval(() => {
+          current = Math.min(current + step, target);
+          el.textContent = Math.floor(current).toLocaleString() + (target === 100 ? '%' : '+');
+          if (current >= target) clearInterval(t);
+        }, 25);
+        obs.disconnect();
+      }
+    });
+    obs.observe(el);
+  });
+}
+
+// ─── AMBIENT AUDIO ─────────────────────────────
+let audioCtx, gainNode, audioStarted = false;
+function initAudio() {
+  document.addEventListener('click', () => {
+    if (audioStarted) return;
+    audioStarted = true;
+    try {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      gainNode = audioCtx.createGain();
+      gainNode.gain.value = 0.04;
+      gainNode.connect(audioCtx.destination);
+      playAmbient();
+    } catch(e) {}
+  }, { once: true });
+}
+
+function playAmbient() {
+  if (!audioCtx) return;
+  // Deep low rumble — gym atmosphere
+  const frequencies = [40, 60, 80, 120];
+  frequencies.forEach((freq, i) => {
+    const osc = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    osc.type = i % 2 === 0 ? 'sine' : 'triangle';
+    osc.frequency.value = freq;
+    g.gain.value = 0.015 - i * 0.002;
+    osc.connect(g);
+    g.connect(gainNode);
+    osc.start();
+    // Subtle pulsation
+    const lfo = audioCtx.createOscillator();
+    const lfoGain = audioCtx.createGain();
+    lfo.frequency.value = 0.08 + i * 0.03;
+    lfoGain.gain.value = 0.008;
+    lfo.connect(lfoGain);
+    lfoGain.connect(g.gain);
+    lfo.start();
+  });
+}
+
+function toggleAudio() {
+  if (!audioCtx) return;
+  if (audioCtx.state === 'running') {
+    audioCtx.suspend();
+    showToast('AMBIENT AUDIO OFF');
+  } else {
+    audioCtx.resume();
+    showToast('AMBIENT AUDIO ON');
+  }
+}
+
+// ─── PRODUCTS ──────────────────────────────────
+function renderProducts(filter) {
+  const grid = document.getElementById('products-grid');
+  const items = filter === 'ALL' ? PRODUCTS : PRODUCTS.filter(p => p.category === filter);
+  grid.innerHTML = items.map((p, i) => `
+    <div class="product-card" style="animation-delay:${i * 0.06}s" onclick="openDrawer(${p.id})">
+      <div class="card-glow"></div>
+      <div class="card-scan"></div>
+      <div class="card-img-wrap">
+        <img class="card-img" src="${p.img}" alt="${p.name}"
+          onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <div class="card-img-placeholder" style="display:none">${p.emoji}</div>
+        ${p.badge ? `<div class="card-badge">${p.badge}</div>` : ''}
+        <div class="card-category-tag">${p.category}</div>
+      </div>
+      <div class="card-body">
+        <div class="card-name">${p.name}</div>
+        <div class="card-desc">${p.desc}</div>
+        <div class="card-meta">
+          <div class="card-price">PKR ${p.price.toLocaleString()}</div>
+          <div class="card-rating">${'★'.repeat(Math.floor(p.rating))} ${p.rating} (${p.reviews})</div>
+        </div>
+        <div class="card-actions">
+          <button class="btn-card-buy" onclick="event.stopPropagation(); openWAProductId(${p.id})">Order Now</button>
+          <button class="btn-card-wa" onclick="event.stopPropagation(); openWAProductId(${p.id})">💬</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function filterProducts(cat, btn) {
+  document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderProducts(cat);
+}
+
+// ─── DRAWER ────────────────────────────────────
+function openDrawer(id) {
+  const p = PRODUCTS.find(x => x.id === id);
+  if (!p) return;
+  currentProduct = p;
+  document.getElementById('d-category').textContent = p.category;
+  document.getElementById('d-name').textContent = p.name;
+  document.getElementById('d-stars').textContent = '★'.repeat(Math.floor(p.rating)) + ` ${p.rating} — ${p.reviews} reviews`;
+  document.getElementById('d-desc').textContent = p.desc;
+  document.getElementById('d-price').textContent = `PKR ${p.price.toLocaleString()}`;
+  document.getElementById('d-buy-btn').onclick = () => openWAProductId(p.id);
+  document.getElementById('detail-drawer').classList.add('open');
+  if (voiceOn) speakTyler(`${p.name}. ${p.desc.split('.')[0]}. Priced at PKR ${p.price.toLocaleString()}.`);
+}
+function closeDrawer() {
+  document.getElementById('detail-drawer').classList.remove('open');
+  currentProduct = null;
+}
+
+// ─── WHATSAPP ──────────────────────────────────
+function openWA(msg = '') {
+  const text = msg || `Hi AW GYMS! I'm interested in your products. Please share more details.`;
+  window.open(`https://wa.me/${WA}?text=${encodeURIComponent(text)}`, '_blank');
+}
+function openWAProduct() {
+  if (currentProduct) openWAProductId(currentProduct.id);
+  else openWA();
+}
+function openWAProductId(id) {
+  const p = PRODUCTS.find(x => x.id === id);
+  if (p) openWA(`Hi AW GYMS! I'm interested in *${p.name}* — PKR ${p.price.toLocaleString()}. Please provide details and arrange delivery.`);
+}
+
+// ─── AR ENGINE ─────────────────────────────────
+function openARSection() {
+  document.getElementById('ar-section').scrollIntoView({ behavior: 'smooth' });
+  setTimeout(startAR, 600);
+}
+
+function startAR() {
+  if (arStarted) return;
+  setLoading(true, 'Starting Camera');
+  navigator.mediaDevices.getUserMedia({
+    video: { facingMode: 'environment', width: { ideal: 1280 }, height: { ideal: 720 } }
+  }).then(stream => {
+    const vid = document.getElementById('ar-camera');
+    vid.srcObject = stream; vid.play();
+    vid.onloadedmetadata = () => {
+      initThree();
+      arStarted = true;
+      setLoading(false);
+      showToast('AR ACTIVE — TAP TO PLACE GYM');
+      speakTyler('AR mode activated. Point your camera at the floor and tap to place the AW Gyms store in your space.');
+    };
+  }).catch(() => {
+    initThree(true);
+    arStarted = true;
+    setLoading(false);
+    showToast('AR RUNNING — TAP TO PLACE GYM');
+  });
+}
+
+function initThree(noCam = false) {
+  const canvas = document.getElementById('ar-canvas');
+  const W = canvas.offsetWidth || window.innerWidth;
+  const H = canvas.offsetHeight || 500;
+
+  threeScene = new THREE.Scene();
+  threeCam = new THREE.PerspectiveCamera(60, W / H, 0.01, 100);
+  threeCam.position.set(0, 1.8, 4);
+  threeCam.lookAt(0, 0, 0);
+
+  threeRenderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+  threeRenderer.setSize(W, H);
+  threeRenderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  threeRenderer.shadowMap.enabled = true;
+
+  // Lights
+  threeScene.add(new THREE.AmbientLight(0xfff8e7, 0.5));
+  const sun = new THREE.DirectionalLight(0xfff0d0, 1.5);
+  sun.position.set(4, 8, 4); sun.castShadow = true; threeScene.add(sun);
+  const gold = new THREE.PointLight(0xC9A84C, 2, 10);
+  gold.position.set(0, 4, 0); threeScene.add(gold);
+  const neonLight = new THREE.PointLight(0x00FFB3, 1, 8);
+  neonLight.position.set(-3, 2, -3); threeScene.add(neonLight);
+
+  gymGroup = new THREE.Group();
+  gymGroup.visible = false;
+  threeScene.add(gymGroup);
+  buildARGym();
+  canvas.addEventListener('click', arTap);
+  canvas.addEventListener('touchend', e => { e.preventDefault(); arTap(e.changedTouches[0]); }, { passive: false });
+
+  function render() {
+    requestAnimationFrame(render);
+    const t = Date.now() * 0.001;
+    if (gymGroup?.visible) {
+      gymGroup.children.forEach(c => {
+        if (c.userData.floats) {
+          c.rotation.y = t * 0.4 + (c.userData.offset || 0);
+          c.position.y = (c.userData.baseY || 0) + Math.sin(t + (c.userData.offset || 0)) * 0.04;
+        }
+        if (c.userData.tyler) {
+          c.position.y = Math.sin(t * 0.7) * 0.05;
+          c.rotation.y = Math.sin(t * 0.25) * 0.4;
+        }
+      });
+    }
+    threeRenderer.render(threeScene, threeCam);
+  }
+  render();
+}
+
+function buildARGym() {
+  const g = gymGroup;
+  // Floor
+  const floor = new THREE.Mesh(
+    new THREE.PlaneGeometry(10, 10),
+    new THREE.MeshStandardMaterial({ color: 0x0a0a0a, metalness: 0.1, roughness: 0.9 })
+  );
+  floor.rotation.x = -Math.PI / 2; floor.receiveShadow = true; g.add(floor);
+  // Grid
+  g.add(new THREE.GridHelper(10, 20, 0xC9A84C, 0x1a1a1a));
+
+  // Walls
+  const wm = new THREE.MeshStandardMaterial({ color: 0x0d0d0d, metalness: 0.1, roughness: 0.9 });
+  const bw = new THREE.Mesh(new THREE.BoxGeometry(10, 3.5, 0.1), wm);
+  bw.position.set(0, 1.75, -5); g.add(bw);
+  const lw = new THREE.Mesh(new THREE.BoxGeometry(0.1, 3.5, 10), wm);
+  lw.position.set(-5, 1.75, 0); g.add(lw);
+  const rw = lw.clone(); rw.position.set(5, 1.75, 0); g.add(rw);
+
+  // Gold trim
+  const tm = new THREE.MeshStandardMaterial({ color: 0xC9A84C, metalness: 0.9, roughness: 0.1, emissive: 0xC9A84C, emissiveIntensity: 0.15 });
+  [-4,-2,0,2,4].forEach(x => {
+    const trim = new THREE.Mesh(new THREE.BoxGeometry(0.04, 3.5, 0.04), tm);
+    trim.position.set(x, 1.75, -4.95); g.add(trim);
+  });
+
+  // AW GYMS sign (glowing box)
+  const sign = new THREE.Mesh(
+    new THREE.BoxGeometry(3, 0.5, 0.05),
+    new THREE.MeshStandardMaterial({ color: 0xC9A84C, emissive: 0xC9A84C, emissiveIntensity: 0.5, metalness: 0.8 })
+  );
+  sign.position.set(0, 3, -4.9); g.add(sign);
+
+  // Products
+  const positions = [[-2,0,-2],[2,0,-2],[-2,0,1],[2,0,1],[0,0,-3.5],[-3.5,0,-1],[3.5,0,-1],[0,0,2]];
+  PRODUCTS.slice(0, 8).forEach((p, i) => {
+    const pos = positions[i] || [0,0,0];
+    buildARProduct(p, pos);
+  });
+
+  // Tyler
+  buildTyler();
+
+  // Ceiling spots
+  [[-2,-2],[2,-2],[-2,2],[2,2],[0,0]].forEach(([x,z]) => {
+    const b = new THREE.Mesh(new THREE.SphereGeometry(0.08,8,8),
+      new THREE.MeshStandardMaterial({ color:0xFFF8E7, emissive:0xFFF8E7, emissiveIntensity:0.9 }));
+    b.position.set(x, 3.3, z); g.add(b);
+    const spot = new THREE.PointLight(0xFFF8E7, 0.8, 6);
+    spot.position.set(x, 3.3, z); threeScene.add(spot);
+  });
+}
+
+function buildARProduct(p, [px, py, pz]) {
+  const group = new THREE.Group();
+  group.position.set(px, py, pz);
+  group.userData = { floats: true, offset: Math.random() * Math.PI * 2, baseY: 0.05, product: p };
+
+  // Platform
+  const plat = new THREE.Mesh(new THREE.CylinderGeometry(0.42, 0.45, 0.05, 32),
+    new THREE.MeshStandardMaterial({ color:0x111111, metalness:0.7, roughness:0.3 }));
+  plat.position.y = 0.025; group.add(plat);
+
+  // Ring
+  const ring = new THREE.Mesh(new THREE.TorusGeometry(0.42, 0.02, 8, 64),
+    new THREE.MeshStandardMaterial({ color:0xC9A84C, metalness:0.95, roughness:0.05, emissive:0xC9A84C, emissiveIntensity:0.2 }));
+
+  // Body
+  const color = [0x888888, 0x222222, 0x1a1a1a, 0x333322, 0xFF4444, 0x111111, 0x1a2a1a, 0x3366CC][PRODUCTS.indexOf(p) % 8] || 0x555555;
+  const mat = new THREE.MeshStandardMaterial({ color, metalness:0.7, roughness:0.3 });
+  let body;
+  if (p.id <= 4) body = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.5, 0.35), mat);
+  else if (p.id <= 6) body = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.2, 0.5, 12), mat);
+  else body = new THREE.Mesh(new THREE.SphereGeometry(0.22, 12, 12), mat);
+  body.position.y = 0.4; body.castShadow = true; group.add(body);
+
+  // Glow
+  const gl = new THREE.PointLight(0xC9A84C, 0.4, 1.5);
+  gl.position.y = 0.1; group.add(gl);
+
+  gymGroup.add(group);
+}
+
+function buildTyler() {
+  const t = new THREE.Group();
+  t.position.set(0, 0, -1.5);
+  t.userData = { tyler: true };
+
+  const skin = new THREE.MeshStandardMaterial({ color:0xD4A574, metalness:0.05, roughness:0.9 });
+  const suit = new THREE.MeshStandardMaterial({ color:0xC9A84C, metalness:0.3, roughness:0.7 });
+  const dark = new THREE.MeshStandardMaterial({ color:0x222222, metalness:0.2, roughness:0.8 });
+
+  // Body
+  t.add(Object.assign(new THREE.Mesh(new THREE.CylinderGeometry(0.2,0.17,0.6,12), suit), { position: new THREE.Vector3(0,1,0), castShadow: true }));
+  // Head
+  const head = new THREE.Mesh(new THREE.SphereGeometry(0.16,16,16), skin);
+  head.position.set(0,1.55,0); head.castShadow = true; t.add(head);
+  // Eyes
+  [-0.06,0.06].forEach(x => {
+    const eye = new THREE.Mesh(new THREE.SphereGeometry(0.025,8,8), new THREE.MeshStandardMaterial({color:0x111111}));
+    eye.position.set(x,1.58,0.15); t.add(eye);
+  });
+  // Arms
+  [-1,1].forEach(s => {
+    const arm = new THREE.Mesh(new THREE.CylinderGeometry(0.07,0.06,0.5,8), dark);
+    arm.position.set(s*0.3,1,0); arm.rotation.z = s*0.35; t.add(arm);
+  });
+  // Legs
+  [-1,1].forEach(s => {
+    const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.08,0.07,0.65,8), dark);
+    leg.position.set(s*0.1,0.34,0); t.add(leg);
+  });
+
+  gymGroup.add(t);
+  gymGroup.userData.tyler = t;
+}
+
+function arTap(e) {
+  if (!gymPlaced) {
+    gymGroup.position.set(0, -1.5, -1.5);
+    gymGroup.visible = true;
+    gymPlaced = true;
+    document.getElementById('ar-hint').style.display = 'none';
+    showToast('GYM PLACED — TAP PRODUCTS TO EXPLORE');
+    speakTyler('Welcome to AW Gyms! The store is now placed in your space. Tap any equipment to see details and pricing.');
+    return;
+  }
+  // Raycast for product tap
+  const rect = threeRenderer.domElement.getBoundingClientRect();
+  const mx = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+  const my = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+  const ray = new THREE.Raycaster();
+  ray.setFromCamera({x:mx, y:my}, threeCam);
+  const objs = [];
+  gymGroup.traverse(o => { if (o.isMesh) objs.push(o); });
+  const hits = ray.intersectObjects(objs, true);
+  if (hits.length) {
+    let obj = hits[0].object;
+    while (obj.parent && !obj.userData.product && !obj.userData.tyler) obj = obj.parent;
+    if (obj.userData.product) { openDrawer(obj.userData.product.id); return; }
+    if (obj.userData.tyler) { openTyler(); return; }
+  }
+}
+
+function resetAR() {
+  gymGroup.visible = false;
+  gymPlaced = false;
+  document.getElementById('ar-hint').style.display = 'block';
+  showToast('GYM RESET');
+}
+
+// ─── TYLER AI CHAT ──────────────────────────────
+function openTyler() {
+  document.getElementById('tyler-panel').classList.add('open');
+  if (!chatHistory.length) {
+    addMsg('tyler', `Welcome to **AW GYMS**! 💪 I'm Tyler, your personal AI fitness trainer.\n\nI'm here to help you choose the perfect equipment or supplements, build your workout plan, or answer any fitness questions.\n\nWhat's your fitness goal today?`);
+  }
+}
+function closeTyler() {
+  document.getElementById('tyler-panel').classList.remove('open');
+}
+
+function addMsg(role, text) {
+  const box = document.getElementById('chat-msgs');
+  const div = document.createElement('div');
+  div.className = `msg msg-${role === 'tyler' ? 'tyler' : 'user'}`;
+  const t = new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+  div.innerHTML = `<div class="msg-bubble">${text.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>')}</div><div class="msg-time">${role==='tyler'?'TYLER · ':'YOU · '}${t}</div>`;
+  box.appendChild(div);
+  box.scrollTop = box.scrollHeight;
+  if (role !== 'tyler') chatHistory.push({ role:'user', content: text });
+  else chatHistory.push({ role:'assistant', content: text });
+}
+
+function showTyping() {
+  const box = document.getElementById('chat-msgs');
+  const d = document.createElement('div');
+  d.className = 'msg msg-tyler'; d.id = 'typing';
+  d.innerHTML = `<div class="typing-ind"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>`;
+  box.appendChild(d);
+  box.scrollTop = box.scrollHeight;
+}
+function removeTyping() { document.getElementById('typing')?.remove(); }
+
+async function sendMsg() {
+  const inp = document.getElementById('chat-input');
+  const text = inp.value.trim();
+  if (!text) return;
+  inp.value = '';
+  addMsg('user', text);
+  await callTyler(text);
+}
+
+async function askChip(text) {
+  addMsg('user', text);
+  await callTyler(text);
+}
+
+async function callTyler(text) {
+  showTyping();
+  try {
+    const res = await fetch(`${API_BASE}/api/chat`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        messages: chatHistory.slice(-10).filter(m => m.role==='user'||m.role==='assistant'),
+        productContext: currentProduct || null
+      })
+    });
+    const data = await res.json();
+    removeTyping();
+    if (data.reply) {
+      addMsg('tyler', data.reply);
+      if (voiceOn) speakTyler(data.reply.replace(/<[^>]*>/g,'').replace(/\*\*/g,'').slice(0,200));
+    } else {
+      addMsg('tyler', "Connection issue with the server. Make sure your backend is running on port 6700! 💪");
+    }
+  } catch(e) {
+    removeTyping();
+    addMsg('tyler', "Backend not connected. Run `node server.js` in Termux on port 6700, then try again! 🔧");
+  }
+}
+
+// ─── VOICE / TTS ───────────────────────────────
+function speakTyler(text) {
+  if (!voiceOn || !window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.rate = 0.92; u.pitch = 0.85; u.volume = 0.85;
+  const voices = window.speechSynthesis.getVoices();
+  const male = voices.find(v => /David|Daniel|James|Male|Google UK English Male/i.test(v.name));
+  if (male) u.voice = male;
+  u.onstart = () => document.getElementById('voice-btn').classList.add('active');
+  u.onend   = () => document.getElementById('voice-btn').classList.remove('active');
+  window.speechSynthesis.speak(u);
+}
+window.speechSynthesis?.addEventListener('voiceschanged', () => {});
+
+function toggleVoice() {
+  voiceOn = !voiceOn;
+  window.speechSynthesis?.cancel();
+  showToast(voiceOn ? 'VOICE ON' : 'VOICE OFF');
+  document.getElementById('voice-btn').style.opacity = voiceOn ? '1' : '0.4';
+}
+
+// ─── UTILS ─────────────────────────────────────
+function scrollToSection(id) {
+  document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+}
+function openProducts() { scrollToSection('products-section'); }
+
+function setLoading(on, text = 'Loading') {
+  const el = document.getElementById('loading-screen');
+  el.classList.toggle('on', on);
+  if (on) document.getElementById('loading-text').textContent = text;
+}
+
+function showToast(msg) {
+  document.querySelector('.toast')?.remove();
+  const t = document.createElement('div');
+  t.className = 'toast'; t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 3000);
+}
+</script>
+<!--
+  ═══════════════════════════════════════════════════════
+  AW GYMS — AUDIO SYSTEM
+  Add this entire block just before </body> in index.html
+  
+  FILE STRUCTURE:
+  audio/
+  ├── cinematic.mp3    ← dark orchestral / cinematic track
+  ├── hype.mp3         ← gym hype / hip-hop energy
+  └── cyber.mp3        ← ambient electronic / cyberpunk
+  ═══════════════════════════════════════════════════════
+-->
+
+<!-- ── AUDIO ELEMENTS ── -->
+<audio id="track-cinematic" src="audio/cinematic.mp3" loop preload="none"></audio>
+<audio id="track-hype"      src="audio/hype.mp3"      loop preload="none"></audio>
+<audio id="track-cyber"     src="audio/cyber.mp3"     loop preload="none"></audio>
+
+<!-- ── AUDIO PLAYER UI ── -->
+<div id="audio-player">
+
+  <!-- Collapsed pill (always visible) -->
+  <div id="audio-pill" onclick="toggleAudioPanel()">
+    <div id="audio-pill-bars">
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
+    </div>
+    <div id="audio-pill-label">MUSIC</div>
+    <div id="audio-pill-arrow">▲</div>
+  </div>
+
+  <!-- Expanded panel -->
+  <div id="audio-panel">
+
+    <div class="ap-header">
+      <div class="ap-title">AW GYMS AUDIO</div>
+      <div class="ap-subtitle" id="ap-now-playing">SELECT A TRACK</div>
+    </div>
+
+    <!-- Track selector -->
+    <div class="ap-tracks">
+      <div class="ap-track" id="track-btn-cinematic" onclick="switchTrack('cinematic')">
+        <div class="ap-track-icon">🎬</div>
+        <div class="ap-track-info">
+          <div class="ap-track-name">Cinematic</div>
+          <div class="ap-track-desc">Dark orchestral · Epic</div>
+        </div>
+        <div class="ap-track-indicator"></div>
+      </div>
+      <div class="ap-track" id="track-btn-hype" onclick="switchTrack('hype')">
+        <div class="ap-track-icon">🔥</div>
+        <div class="ap-track-info">
+          <div class="ap-track-name">Hype</div>
+          <div class="ap-track-desc">Gym energy · Hip-hop</div>
+        </div>
+        <div class="ap-track-indicator"></div>
+      </div>
+      <div class="ap-track" id="track-btn-cyber" onclick="switchTrack('cyber')">
+        <div class="ap-track-icon">⚡</div>
+        <div class="ap-track-info">
+          <div class="ap-track-name">Cyberpunk</div>
+          <div class="ap-track-desc">Ambient electronic</div>
+        </div>
+        <div class="ap-track-indicator"></div>
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="ap-controls">
+      <button class="ap-ctrl-btn" id="ap-prev" onclick="prevTrack()" title="Previous">⏮</button>
+      <button class="ap-ctrl-btn ap-play-btn" id="ap-play" onclick="togglePlay()" title="Play/Pause">▶</button>
+      <button class="ap-ctrl-btn" id="ap-next" onclick="nextTrack()" title="Next">⏭</button>
+    </div>
+
+    <!-- Volume -->
+    <div class="ap-volume-row">
+      <span class="ap-vol-icon" onclick="toggleMute()">🔊</span>
+      <input type="range" class="ap-volume" id="ap-volume"
+        min="0" max="100" value="60"
+        oninput="setVolume(this.value)">
+      <span class="ap-vol-val" id="ap-vol-val">60%</span>
+    </div>
+
+    <!-- Progress bar -->
+    <div class="ap-progress-wrap">
+      <div class="ap-progress-bg">
+        <div class="ap-progress-fill" id="ap-progress-fill"></div>
+      </div>
+      <div class="ap-time-row">
+        <span id="ap-time-cur">0:00</span>
+        <span id="ap-time-dur">0:00</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<style>
+/* ═══════════════════════════════════════════════
+   AW GYMS AUDIO SYSTEM STYLES
+   ═══════════════════════════════════════════════ */
+
+#audio-player {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 1.5rem;
+  z-index: 700;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0;
+}
+
+/* ── PILL ── */
+#audio-pill {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(8,8,8,0.92);
+  border: 1px solid rgba(201,168,76,0.35);
+  backdrop-filter: blur(20px);
+  padding: 0.6rem 1.1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  clip-path: polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%);
+  user-select: none;
+}
+#audio-pill:hover {
+  border-color: rgba(201,168,76,0.7);
+  background: rgba(12,12,12,0.97);
+  box-shadow: 0 0 20px rgba(201,168,76,0.15);
+}
+
+/* Visualizer bars */
+#audio-pill-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 16px;
+}
+.bar {
+  width: 3px;
+  background: var(--gold, #C9A84C);
+  border-radius: 2px;
+  min-height: 3px;
+  transition: height 0.1s ease;
+}
+/* Static heights when paused */
+.bar:nth-child(1) { height: 6px; }
+.bar:nth-child(2) { height: 12px; }
+.bar:nth-child(3) { height: 8px; }
+.bar:nth-child(4) { height: 14px; }
+.bar:nth-child(5) { height: 5px; }
+
+/* Animated heights when playing */
+#audio-player.playing .bar:nth-child(1) { animation: barAnim 0.6s 0.0s ease-in-out infinite alternate; }
+#audio-player.playing .bar:nth-child(2) { animation: barAnim 0.5s 0.1s ease-in-out infinite alternate; }
+#audio-player.playing .bar:nth-child(3) { animation: barAnim 0.7s 0.2s ease-in-out infinite alternate; }
+#audio-player.playing .bar:nth-child(4) { animation: barAnim 0.4s 0.05s ease-in-out infinite alternate; }
+#audio-player.playing .bar:nth-child(5) { animation: barAnim 0.8s 0.15s ease-in-out infinite alternate; }
+
+@keyframes barAnim {
+  from { height: 3px; opacity: 0.5; }
+  to   { height: 16px; opacity: 1; }
+}
+
+#audio-pill-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.55rem;
+  letter-spacing: 0.3em;
+  color: rgba(201,168,76,0.8);
+  text-transform: uppercase;
+}
+
+#audio-pill-arrow {
+  font-size: 0.5rem;
+  color: rgba(201,168,76,0.5);
+  transition: transform 0.3s ease;
+}
+#audio-player.panel-open #audio-pill-arrow {
+  transform: rotate(180deg);
+}
+
+/* ── PANEL ── */
+#audio-panel {
+  width: 280px;
+  background: rgba(8,8,8,0.97);
+  border: 1px solid rgba(201,168,76,0.25);
+  backdrop-filter: blur(30px);
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: max-height 0.45s cubic-bezier(0.16,1,0.3,1),
+              opacity 0.3s ease,
+              transform 0.3s ease;
+  margin-bottom: 6px;
+  order: -1;
+}
+#audio-player.panel-open #audio-panel {
+  max-height: 420px;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.ap-header {
+  padding: 1.2rem 1.2rem 0.8rem;
+  border-bottom: 1px solid rgba(201,168,76,0.1);
+}
+.ap-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.1rem;
+  letter-spacing: 0.2em;
+  background: linear-gradient(135deg, #C9A84C, #00FFB3);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.ap-subtitle {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.5rem;
+  letter-spacing: 0.3em;
+  color: rgba(245,242,238,0.4);
+  text-transform: uppercase;
+  margin-top: 3px;
+}
+
+/* ── TRACKS ── */
+.ap-tracks {
+  padding: 0.8rem 0;
+}
+.ap-track {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0.7rem 1.2rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  position: relative;
+}
+.ap-track:hover { background: rgba(201,168,76,0.05); }
+.ap-track.active { background: rgba(201,168,76,0.08); }
+.ap-track.active::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 2px;
+  background: linear-gradient(180deg, #C9A84C, #00FFB3);
+}
+
+.ap-track-icon { font-size: 1.2rem; flex-shrink: 0; }
+.ap-track-info { flex: 1; }
+.ap-track-name {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: rgba(245,242,238,0.9);
+  letter-spacing: 0.05em;
+}
+.ap-track-desc {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.45rem;
+  letter-spacing: 0.15em;
+  color: rgba(245,242,238,0.35);
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+.ap-track-indicator {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: rgba(201,168,76,0.2);
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+.ap-track.active .ap-track-indicator {
+  background: #00FFB3;
+  box-shadow: 0 0 8px rgba(0,255,179,0.6);
+  animation: indPulse 1.5s ease infinite;
+}
+@keyframes indPulse {
+  0%,100% { transform: scale(1); }
+  50% { transform: scale(1.4); }
+}
+
+/* ── CONTROLS ── */
+.ap-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 0.4rem 1.2rem 0.8rem;
+  border-top: 1px solid rgba(201,168,76,0.08);
+}
+.ap-ctrl-btn {
+  background: transparent;
+  border: 1px solid rgba(201,168,76,0.2);
+  color: rgba(201,168,76,0.7);
+  width: 36px; height: 36px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s ease;
+  border-radius: 50%;
+}
+.ap-ctrl-btn:hover { border-color: var(--gold,#C9A84C); color: var(--gold,#C9A84C); }
+.ap-ctrl-btn:active { transform: scale(0.9); }
+
+.ap-play-btn {
+  width: 46px; height: 46px;
+  font-size: 1rem;
+  background: linear-gradient(135deg, rgba(201,168,76,0.15), rgba(0,255,179,0.08));
+  border-color: rgba(201,168,76,0.5);
+  color: var(--gold,#C9A84C);
+}
+.ap-play-btn:hover {
+  background: linear-gradient(135deg, rgba(201,168,76,0.3), rgba(0,255,179,0.15));
+  box-shadow: 0 0 20px rgba(201,168,76,0.2);
+}
+#audio-player.playing .ap-play-btn {
+  border-color: #00FFB3;
+  color: #00FFB3;
+  box-shadow: 0 0 15px rgba(0,255,179,0.2);
+}
+
+/* ── VOLUME ── */
+.ap-volume-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0 1.2rem 0.8rem;
+}
+.ap-vol-icon {
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+.ap-vol-icon:active { transform: scale(0.85); }
+
+.ap-volume {
+  flex: 1;
+  -webkit-appearance: none;
+  height: 3px;
+  background: rgba(201,168,76,0.15);
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+}
+.ap-volume::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: var(--gold,#C9A84C);
+  cursor: pointer;
+  box-shadow: 0 0 6px rgba(201,168,76,0.5);
+}
+.ap-vol-val {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.5rem;
+  color: rgba(201,168,76,0.5);
+  letter-spacing: 0.1em;
+  width: 28px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+/* ── PROGRESS ── */
+.ap-progress-wrap {
+  padding: 0 1.2rem 1.2rem;
+}
+.ap-progress-bg {
+  height: 2px;
+  background: rgba(201,168,76,0.1);
+  border-radius: 1px;
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;
+}
+.ap-progress-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #C9A84C, #00FFB3);
+  border-radius: 1px;
+  transition: width 0.5s linear;
+  position: relative;
+}
+.ap-progress-fill::after {
+  content: '';
+  position: absolute;
+  right: -3px; top: -2px;
+  width: 6px; height: 6px;
+  background: #C9A84C;
+  border-radius: 50%;
+  box-shadow: 0 0 6px rgba(201,168,76,0.6);
+}
+.ap-time-row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 6px;
+}
+.ap-time-row span {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.45rem;
+  letter-spacing: 0.1em;
+  color: rgba(245,242,238,0.3);
+}
+
+/* Mobile adjustments */
+@media (max-width: 480px) {
+  #audio-panel { width: 260px; }
+}
+</style>
+
+<script>
+// ═══════════════════════════════════════════════
+//  AW GYMS — AUDIO SYSTEM
+// ═══════════════════════════════════════════════
+
+const TRACKS = {
+  cinematic: { el: null, name: 'Cinematic · Dark Orchestral' },
+  hype:      { el: null, name: 'Hype · Gym Energy' },
+  cyber:     { el: null, name: 'Cyberpunk · Ambient Electronic' }
+};
+
+let currentTrack = null;
+let isPlaying = false;
+let isMuted = false;
+let currentVolume = 0.6;
+const trackOrder = ['cinematic', 'hype', 'cyber'];
+let progressTimer = null;
+
+// Init on DOM ready
+document.addEventListener('DOMContentLoaded', initAudioSystem);
+// Also init immediately if DOM is already loaded
+if (document.readyState !== 'loading') initAudioSystem();
+
+function initAudioSystem() {
+  TRACKS.cinematic.el = document.getElementById('track-cinematic');
+  TRACKS.hype.el      = document.getElementById('track-hype');
+  TRACKS.cyber.el     = document.getElementById('track-cyber');
+
+  Object.values(TRACKS).forEach(t => {
+    if (t.el) {
+      t.el.volume = currentVolume;
+      t.el.addEventListener('ended', nextTrack);
+      t.el.addEventListener('timeupdate', updateProgress);
+      t.el.addEventListener('loadedmetadata', updateProgress);
+    }
+  });
+
+  // Auto-start on first touch/click anywhere
+  document.addEventListener('click',     autoStart, { once: true });
+  document.addEventListener('touchstart', autoStart, { once: true });
+}
+
+function autoStart() {
+  if (!currentTrack) switchTrack('cinematic');
+}
+
+// ── PANEL TOGGLE ───────────────────────────────
+function toggleAudioPanel() {
+  document.getElementById('audio-player').classList.toggle('panel-open');
+  const arrow = document.getElementById('audio-pill-arrow');
+  // arrow rotation handled by CSS
+}
+
+// ── SWITCH TRACK ───────────────────────────────
+function switchTrack(name) {
+  // Fade out current
+  if (currentTrack && currentTrack !== name) {
+    fadeOut(TRACKS[currentTrack].el, () => {
+      TRACKS[currentTrack].el.pause();
+      TRACKS[currentTrack].el.currentTime = 0;
+    });
+    document.getElementById(`track-btn-${currentTrack}`)?.classList.remove('active');
+  }
+
+  currentTrack = name;
+  const track = TRACKS[name];
+
+  // Update UI
+  document.querySelectorAll('.ap-track').forEach(t => t.classList.remove('active'));
+  document.getElementById(`track-btn-${name}`)?.classList.add('active');
+  document.getElementById('ap-now-playing').textContent = track.name;
+
+  // Play with fade in
+  track.el.volume = 0;
+  track.el.currentTime = 0;
+  track.el.play().then(() => {
+    fadeIn(track.el, currentVolume);
+    setPlayState(true);
+  }).catch(() => {
+    // Autoplay blocked — update UI only, will play on next interaction
+    setPlayState(false);
+    document.getElementById('ap-now-playing').textContent = 'TAP ▶ TO PLAY';
+  });
+}
+
+// ── PLAY / PAUSE ───────────────────────────────
+function togglePlay() {
+  if (!currentTrack) { switchTrack('cinematic'); return; }
+  const el = TRACKS[currentTrack].el;
+  if (isPlaying) {
+    fadeOut(el, () => el.pause());
+    setPlayState(false);
+  } else {
+    el.play().then(() => {
+      fadeIn(el, currentVolume);
+      setPlayState(true);
+    });
+  }
+}
+
+// ── PREV / NEXT ────────────────────────────────
+function nextTrack() {
+  const idx = trackOrder.indexOf(currentTrack);
+  const next = trackOrder[(idx + 1) % trackOrder.length];
+  switchTrack(next);
+}
+function prevTrack() {
+  const idx = trackOrder.indexOf(currentTrack);
+  const prev = trackOrder[(idx - 1 + trackOrder.length) % trackOrder.length];
+  switchTrack(prev);
+}
+
+// ── VOLUME ─────────────────────────────────────
+function setVolume(val) {
+  currentVolume = val / 100;
+  document.getElementById('ap-vol-val').textContent = val + '%';
+  document.getElementById('ap-volume').value = val;
+  if (currentTrack && !isMuted) TRACKS[currentTrack].el.volume = currentVolume;
+  updateVolIcon(val);
+}
+
+function toggleMute() {
+  isMuted = !isMuted;
+  const icon = document.querySelector('.ap-vol-icon');
+  if (currentTrack) {
+    TRACKS[currentTrack].el.volume = isMuted ? 0 : currentVolume;
+  }
+  icon.textContent = isMuted ? '🔇' : (currentVolume > 0.5 ? '🔊' : '🔉');
+}
+
+function updateVolIcon(val) {
+  const icon = document.querySelector('.ap-vol-icon');
+  if (!isMuted) icon.textContent = val > 60 ? '🔊' : val > 20 ? '🔉' : '🔈';
+}
+
+// ── PROGRESS ───────────────────────────────────
+function updateProgress() {
+  if (!currentTrack) return;
+  const el = TRACKS[currentTrack].el;
+  if (!el.duration) return;
+
+  const pct = (el.currentTime / el.duration) * 100;
+  document.getElementById('ap-progress-fill').style.width = pct + '%';
+  document.getElementById('ap-time-cur').textContent = formatTime(el.currentTime);
+  document.getElementById('ap-time-dur').textContent = formatTime(el.duration);
+}
+
+// Click on progress bar to seek
+document.querySelector?.('.ap-progress-bg')?.addEventListener('click', function(e) {
+  if (!currentTrack) return;
+  const rect = this.getBoundingClientRect();
+  const pct = (e.clientX - rect.left) / rect.width;
+  const el = TRACKS[currentTrack].el;
+  el.currentTime = pct * el.duration;
+});
+
+// ── UI STATE ───────────────────────────────────
+function setPlayState(playing) {
+  isPlaying = playing;
+  const player = document.getElementById('audio-player');
+  const btn = document.getElementById('ap-play');
+  if (playing) {
+    player.classList.add('playing');
+    btn.textContent = '⏸';
+  } else {
+    player.classList.remove('playing');
+    btn.textContent = '▶';
+  }
+}
+
+// ── FADE HELPERS ───────────────────────────────
+function fadeIn(el, targetVol, duration = 800) {
+  el.volume = 0;
+  const steps = 30;
+  const step = targetVol / steps;
+  const interval = duration / steps;
+  let i = 0;
+  const t = setInterval(() => {
+    i++;
+    el.volume = Math.min(el.volume + step, targetVol);
+    if (i >= steps) clearInterval(t);
+  }, interval);
+}
+
+function fadeOut(el, callback, duration = 600) {
+  const startVol = el.volume;
+  const steps = 20;
+  const step = startVol / steps;
+  const interval = duration / steps;
+  let i = 0;
+  const t = setInterval(() => {
+    i++;
+    el.volume = Math.max(el.volume - step, 0);
+    if (i >= steps) { clearInterval(t); if (callback) callback(); }
+  }, interval);
+}
+
+// ── UTILS ──────────────────────────────────────
+function formatTime(s) {
+  if (isNaN(s)) return '0:00';
+  const m = Math.floor(s / 60);
+  const sec = Math.floor(s % 60);
+  return `${m}:${sec.toString().padStart(2, '0')}`;
+}
+</script>
+
+</body>
+</html>
